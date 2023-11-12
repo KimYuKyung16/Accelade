@@ -1,16 +1,59 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 import Footer from '@components/footer';
+import { _getCorporationInfo } from '@apis/api/corporation';
+
+interface InformationProps {
+  title: string;
+  website: string;
+  companyName: string;
+  companyInfo: {
+    FAX: string;
+    email: string;
+    factory: string;
+    manager: string;
+    tell: string;
+  };
+  companyOverview: {
+    capital: string;
+    info: string[];
+    recentSales: string;
+  };
+  customersItems: {
+    customer: string[];
+    exportCountry: string[];
+    exportItem: string[];
+    fromMaterials: string[];
+    importimgCountry: string[];
+    importimgItem: string[];
+    rawMaterials: string[];
+  };
+  facilityStatus: string[];
+  fieldTech: {
+    currentProd: string;
+    field: string[];
+    mainProduct: string[];
+    min: string;
+    processMethod: string[];
+    productivity: string;
+    standard: string[];
+  };
+}
 
 function CorporationDetail() {
-  const dummy1 = [
-    '민간 기업',
-    '2012년 설립',
-    '종업원수 956명',
-    '공장면적 13,000m2',
-    '자본 구조 100%',
-  ];
+  const params = useParams();
+  const id = params.id;
+  const [info, setInfo] = useState<InformationProps | undefined>(undefined);
+
+  // const dummy1 = [
+  //   '민간 기업',
+  //   '2012년 설립',
+  //   '종업원수 956명',
+  //   '공장면적 13,000m2',
+  //   '자본 구조 100%',
+  // ];
 
   const dummy2 = [
     ['자본금', '5,000,000 VND'],
@@ -27,78 +70,94 @@ function CorporationDetail() {
   ];
 
   const dummy4 = [
-    ['수출국', '대만, 홍콩, 중국'],
-    ['수출품', '남성/여성 상의'],
-    ['수입국', '미국, 한국, 중국'],
-    ['수입품', '각종의 합성사'],
+    ['수출국', info?.customersItems?.exportCountry.join(', ')],
+    ['수출품', info?.customersItems?.exportItem.join(', ')],
+    ['수입국', info?.customersItems?.importimgCountry.join(', ')],
+    ['수입품', info?.customersItems?.importimgItem.join(', ')],
   ];
 
   const dummy5 = [
-    ['원자재', '60% 면 (미국), OEKOTEX 인증서, 일본 수입기계'],
-    ['원자재 출처', '국내 및 수입'],
-  ];
-
-  const dummy6 = [
-    '원사제품',
-    '재킷',
-    '미니스커트',
-    '반바지',
-    '남녀 진/카키/벨벳',
-    '아동복',
-    '티셔츠',
-    '셔츠',
-    '수트',
-    '외투',
-  ];
-
-  const dummy7 = [
-    ['분야', '섬유'],
-    ['가공방식', '의류가공'],
-    ['현생산량', '180,000'],
-    ['최소주문', '-'],
+    ['원자재', info?.customersItems?.rawMaterials.join(', ')],
     [
-      '생산능력',
-      'ISO 9001:2008 기준 기술생산 적용, 생산팀당 30~35기계 배치, 공정별 관리',
+      '원자재 출처',
+      typeof info?.customersItems?.fromMaterials !== 'string'
+        ? info?.customersItems?.fromMaterials.join(', ')
+        : null,
     ],
   ];
+
+  // const dummy6 = [
+  //   '원사제품',
+  //   '재킷',
+  //   '미니스커트',
+  //   '반바지',
+  //   '남녀 진/카키/벨벳',
+  //   '아동복',
+  //   '티셔츠',
+  //   '셔츠',
+  //   '수트',
+  //   '외투',
+  // ];
+
+  const dummy7 = [
+    ['분야', info?.fieldTech.field.join(', ')],
+    [
+      '가공방식',
+      info?.fieldTech.processMethod.length
+        ? info?.fieldTech.processMethod.join(', ')
+        : 'N/A',
+    ],
+    ['현생산량', info?.fieldTech.currentProd],
+    ['최소주문', info?.fieldTech.min],
+    ['생산능력', info?.fieldTech.productivity],
+  ];
+
+  const getCorporationInfo = async () => {
+    if (id) {
+      const result = await _getCorporationInfo(id);
+      // console.log(result.data);
+      setInfo(result.data);
+    }
+  };
+
+  useEffect(() => {
+    getCorporationInfo();
+  }, [id]);
 
   return (
     <CorporationDetailLayout>
       <CorporationInfo>
         <TitleBox>
           <div>
-            <h1>GENVIET 패션 주식회사</h1>
-            <p>https://genviet.com/</p>
+            <h1>{info?.title}</h1>
+            <p>{info?.website}</p>
           </div>
           <img src="/images/corporation-logo.svg" />
         </TitleBox>
         <InformationBox>
           <div>
             <span>회사</span>
-            <p>Số 56B Bà Triệu, Phường Hàng Bài, quận Hoàn Kiếm, TP Hà Nội</p>
+            <p>{info?.companyName}</p>
           </div>
           <div>
             <span>공장</span>
-            <p>
-              Cụm Công nghiệp Cầu Giát, phường Châu Giang, Thị xã Duy Tiên, Tỉnh
-              Hà Nam
-            </p>
+            <p>{info?.companyInfo.factory}</p>
           </div>
           <div>
             <span>담당자</span>
-            <p>사장, Mr. Nguyễn Huy Dũng </p>
+            <p>{info?.companyInfo.manager}</p>
           </div>
           <div>
             <span>Tel</span>
-            <p>0909398188</p>
+            <p>{info?.companyInfo.tell}</p>
           </div>
           <div>
             <span>Email</span>
-            <p>cskh@genviet.com</p>
+            <p>{info?.companyInfo.email}</p>
           </div>
           <div>
             <span>Fax</span>
-            <p>N/A</p>
+            <p>{info?.companyInfo.FAX}</p>
           </div>
         </InformationBox>
         <button>문의</button>
@@ -107,7 +166,7 @@ function CorporationDetail() {
         <Overview>
           <h3>기업 개요</h3>
           <div>
-            {dummy1.map((x) => {
+            {info?.companyOverview.info.map((x) => {
               return <span key={x}>{x}</span>;
             })}
           </div>
@@ -136,7 +195,11 @@ function CorporationDetail() {
           <h3>거래처 및 품목</h3>
           <div>
             <p>주요 고객</p>
-            <span>Knf International Co .,Ltd</span>
+            <div>
+              {info?.customersItems.customer.map((customer) => {
+                return <span key={customer}>{customer}</span>;
+              })}
+            </div>
           </div>
           <div>
             {dummy4.map((x) => {
@@ -164,14 +227,20 @@ function CorporationDetail() {
           <div>
             <p>주제품</p>
             <div>
-              {dummy6.map((x) => {
+              {info?.fieldTech.mainProduct.map((x) => {
                 return <span key={x}>{x}</span>;
               })}
             </div>
           </div>
           <div>
             <p>표준, 규격</p>
-            <span>ISO 9001: 2008</span>
+            <div>
+              {typeof info?.fieldTech.standard !== 'string'
+                ? info?.fieldTech.standard.map((x) => {
+                    return <span key={x}>{x}</span>;
+                  })
+                : null}
+            </div>
           </div>
           <div>
             {dummy7.map((x) => {
@@ -183,11 +252,11 @@ function CorporationDetail() {
               );
             })}
           </div>
-          <div>
+          {/* <div>
             {new Array(8).fill(0).map((_, index) => {
               return <img key={index} src="" alt="제품 이미지" />;
             })}
-          </div>
+          </div> */}
         </Technology>
         <Facility>
           <h3>시설현황</h3>
@@ -201,7 +270,7 @@ function CorporationDetail() {
             </tr>
             <tr>
               <td rowSpan={6}>시설</td>
-              <td>1, 2, 3, 4, 5 바늘 재봉틀</td>
+              <td>&nbsp;</td>
               <td>&nbsp;</td>
               <td>&nbsp;</td>
               <td>&nbsp;</td>
@@ -239,7 +308,9 @@ function CorporationDetail() {
   );
 }
 
-const CorporationDetailLayout = styled.div``;
+const CorporationDetailLayout = styled.div`
+  width: 100%;
+`;
 
 const CorporationInfo = styled.section`
   display: flex;
@@ -328,6 +399,7 @@ const InformationBox = styled.div`
       font-style: normal;
       font-weight: 600;
       line-height: 20px;
+      white-space: nowrap;
     }
 
     & > p {
@@ -376,6 +448,7 @@ const Overview = styled.section`
     display: flex;
     flex-direction: row;
     gap: 15px;
+    flex-wrap: wrap;
 
     & > span {
       padding: 12px 20px;
@@ -386,12 +459,18 @@ const Overview = styled.section`
       font-weight: 600;
       line-height: 20px;
       border-radius: 100px;
+      white-space: nowrap;
+
+      &:nth-child(5) {
+        background: #ffe9ed;
+      }
     }
   }
 
   & > div:nth-child(3) {
     display: flex;
     gap: 15px;
+    flex-wrap: wrap;
 
     & > div {
       display: flex;
@@ -408,6 +487,7 @@ const Overview = styled.section`
         padding: 8px 10px;
         border-radius: 10px;
         background: #e4e7e9;
+        white-space: nowrap;
       }
 
       & > p {
@@ -416,6 +496,13 @@ const Overview = styled.section`
         font-style: normal;
         font-weight: 500;
         line-height: 16px;
+      }
+
+      &:nth-child(n + 3):nth-child(-n + 5) {
+        & > span {
+          color: #ffffff;
+          background: #00a8bd;
+        }
       }
     }
   }
@@ -471,11 +558,31 @@ const Business = styled.section`
     line-height: 34px;
   }
 
+  // 주요 고객
   & > div:nth-child(2) {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
+
+    & > div {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 12px;
+
+      & > span {
+        padding: 10px 20px;
+        border-radius: 10px;
+        background: #00a8bd;
+        color: #fff;
+        font-size: 1.8rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 18px;
+      }
+    }
 
     & > p {
       color: rgba(11, 10, 10, 0.8);
@@ -484,22 +591,13 @@ const Business = styled.section`
       font-weight: 600;
       line-height: 24px;
     }
-
-    & > span {
-      padding: 10px 20px;
-      border-radius: 10px;
-      background: #00a8bd;
-      color: #fff;
-      font-size: 1.8rem;
-      font-style: normal;
-      font-weight: 600;
-      line-height: 18px;
-    }
   }
 
+  // 수출국 ~ 수입품
   & > div:nth-child(3) {
     display: flex;
     gap: 15px;
+    flex-wrap: wrap;
 
     & > div {
       display: flex;
@@ -528,6 +626,7 @@ const Business = styled.section`
     }
   }
 
+  // 원자재
   & > div:nth-child(4) {
     display: flex;
     gap: 15px;
@@ -568,7 +667,7 @@ const Technology = styled.section`
   background: #fff;
   width: 1200px;
   height: auto;
-  padding: 30px 0px 40px 30px;
+  padding: 30px 30px 40px 30px;
   gap: 30px;
 
   & > h3 {
@@ -596,6 +695,7 @@ const Technology = styled.section`
       display: flex;
       flex-direction: row;
       gap: 8px;
+      flex-wrap: wrap;
 
       & > span {
         padding: 10px 20px;
@@ -606,6 +706,7 @@ const Technology = styled.section`
         font-style: normal;
         font-weight: 600;
         line-height: 18px;
+        white-space: nowrap;
       }
     }
   }
@@ -616,23 +717,31 @@ const Technology = styled.section`
     align-items: flex-start;
     gap: 12px;
 
+    & > div {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 12px;
+
+      & > span {
+        color: #fff;
+        font-size: 1.8rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 18px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        background: #00a8bd;
+        white-space: nowrap;
+      }
+    }
+
     & > p {
       color: rgba(11, 10, 10, 0.8);
       font-size: 20px;
       font-style: normal;
       font-weight: 600;
       line-height: 24px;
-    }
-
-    & > span {
-      color: #fff;
-      font-size: 1.8rem;
-      font-style: normal;
-      font-weight: 600;
-      line-height: 18px;
-      padding: 10px 20px;
-      border-radius: 10px;
-      background: #00a8bd;
     }
   }
 
@@ -658,6 +767,7 @@ const Technology = styled.section`
         padding: 8px 10px;
         border-radius: 10px;
         background: #303d48;
+        white-space: nowrap;
       }
 
       & > p {

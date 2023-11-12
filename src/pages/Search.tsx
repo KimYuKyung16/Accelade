@@ -5,14 +5,14 @@ import { styled } from 'styled-components';
 function _Search() {
   return (
     <SearchLayout>
-      <Header>
-        <img src="images/main-logo.svg" />
-        <Search>
-          <img src="icons/search-icon.svg" />
-          <input placeholder="기업명을 검색하세요." />
-        </Search>
-      </Header>
       <Main>
+        <Header>
+          <img src="images/main-logo.svg" />
+          <Search>
+            <img src="icons/search-icon.svg" />
+            <input placeholder="기업명을 검색하세요." />
+          </Search>
+        </Header>
         <div>
           <p>검색 결과</p>
           <p>1건</p>
@@ -29,7 +29,6 @@ function _Search() {
                   </div>
                   <p>www.hoatho.com.vn</p>
                 </div>
-                <p>자세히</p>
               </Corporation>
             );
           })}
@@ -43,6 +42,8 @@ function _Search() {
 const SearchLayout = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
+  min-width: 1920px;
 `;
 
 const Header = styled.header`
@@ -51,11 +52,10 @@ const Header = styled.header`
   align-items: center;
   margin-bottom: 80px;
   gap: 50px;
+  /* min-width: 1920px; */
   width: 100%;
-  min-width: 1920px;
-  width: 100%;
-  padding: 0 360px;
-  max-width: 1920px;
+  /* padding: 0 360px; */
+  /* max-width: 1920px; */
   margin: 0 auto;
   margin-top: 80px;
 
@@ -96,16 +96,16 @@ const Main = styled.main`
   flex-direction: column;
   gap: 50px;
   width: 100%;
-  min-width: 1920px;
-  width: 100%;
+  /* min-width: 1920px; */
   padding: 0 360px;
   max-width: 1920px;
   margin: 0 auto;
   margin-top: 80px;
   height: auto;
   margin-bottom: 330px;
+  min-height: calc(100vh - 760px);
 
-  & > div:nth-child(1) {
+  & > div:nth-child(2) {
     display: flex;
     flex-direction: row;
     gap: 15px;

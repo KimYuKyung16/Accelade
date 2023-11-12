@@ -1,15 +1,18 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import { styled } from 'styled-components';
 import Footer from '@components/footer';
+import { useNavigate } from 'react-router-dom';
 
 function HOME() {
+  const navigate = useNavigate();
+
   const vitenam_db_center1 = [
     ['Machine', '기계'],
     ['Plastic', '플라스틱'],
     ['Automated System', '자동화'],
     ['Chemicals', '화학물질'],
   ];
+
   const vitenam_db_center2 = [
     ['Electronic', '전기/전자'],
     ['Metal', '금속'],
@@ -24,6 +27,9 @@ function HOME() {
       </Header>
       <Main>
         <MainLogo src="images/main-logo.svg" />
+        <Video muted autoPlay loop>
+          <source src="bannervideo.mp4" type="video/mp4" />
+        </Video>
         <Main_Search>
           <img src="icons/search-icon.svg" />
           <input placeholder="기업명을 검색하세요." />
@@ -35,8 +41,24 @@ function HOME() {
               {vitenam_db_center1.map((center) => {
                 return (
                   <div key={center[0]}>
-                    <span>{center[0]}</span>
-                    <span>{center[1]}</span>
+                    <span
+                      onClick={() => {
+                        navigate('/corporation', {
+                          state: { sector: center[1] },
+                        });
+                      }}
+                    >
+                      {center[0]}
+                    </span>
+                    <span
+                      onClick={() => {
+                        navigate('/corporation', {
+                          state: { sector: center[1] },
+                        });
+                      }}
+                    >
+                      {center[1]}
+                    </span>
                   </div>
                 );
               })}
@@ -45,8 +67,24 @@ function HOME() {
               {vitenam_db_center2.map((center) => {
                 return (
                   <div key={center[0]}>
-                    <span>{center[0]}</span>
-                    <span>{center[1]}</span>
+                    <span
+                      onClick={() => {
+                        navigate(`/corporation`, {
+                          state: { sector: center[1] },
+                        });
+                      }}
+                    >
+                      {center[0]}
+                    </span>
+                    <span
+                      onClick={() => {
+                        navigate('/corporation', {
+                          state: { sector: center[1] },
+                        });
+                      }}
+                    >
+                      {center[1]}
+                    </span>
                   </div>
                 );
               })}
@@ -91,13 +129,17 @@ function HOME() {
         <Main_Corporation>
           <h3>한국 기업과 비지니스 매칭을 원하는 기업</h3>
           <Corporation_List>
-            {new Array(8).fill(0).map((_, index) => {
+            {new Array(4).fill(0).map((_, index) => {
               return (
                 <Corporation key={index}>
                   <div>
                     <img src="/images/corporation-image1.jpg" />
                   </div>
-                  <div>
+                  <div
+                    onClick={() => {
+                      navigate('/1');
+                    }}
+                  >
                     <div>
                       <h5>VEAM</h5>
                       <p>www.veamcorp.com</p>
@@ -107,7 +149,6 @@ function HOME() {
                         <span>자동차 조립</span>
                         <span>민간 기업</span>
                       </div>
-                      <span>자세히</span>
                     </div>
                   </div>
                 </Corporation>
@@ -236,6 +277,19 @@ const Info__Component1 = styled.div`
   }
 `;
 
+const Video = styled.video`
+  width: 100%;
+  height: 800px;
+  min-width: 1920px;
+  object-fit: cover;
+  margin-bottom: 80px;
+
+  & > source {
+    width: 100%;
+    height: 100%;
+  }
+`;
+
 const Info__Component2 = styled(Info__Component)``;
 
 const Info__Component3 = styled(Info__Component)`
@@ -317,8 +371,8 @@ const Corporation = styled.div`
     flex-direction: column;
     justify-content: space-between;
     height: 140px;
-    /* background-color: aliceblue; */
     padding: 12px 15px;
+    cursor: pointer;
 
     & > div:nth-child(1) {
       display: flex;
@@ -388,7 +442,7 @@ const HomeLayout = styled.div`
 
 const Header = styled.header`
   width: 100%;
-  padding: 50px 360px 152.18px 360px;
+  padding: 35px 360px 72.18px 360px;
 `;
 
 const Main = styled.main`
@@ -405,7 +459,7 @@ const Main = styled.main`
 const MainLogo = styled.img`
   width: 339.274px;
   height: 77.602px;
-  margin-bottom: 82.22px;
+  margin-bottom: 72.21px;
 `;
 
 const Main_Search = styled.section`
@@ -480,6 +534,11 @@ const DBCenter = styled.div`
         font-weight: 600;
         line-height: 11px;
         text-align: center;
+        cursor: pointer;
+
+        &:hover {
+          background: #303d48;
+        }
       }
 
       & > span:nth-child(2) {
@@ -488,6 +547,7 @@ const DBCenter = styled.div`
         font-style: normal;
         font-weight: 600;
         line-height: 16px;
+        cursor: pointer;
       }
     }
   }

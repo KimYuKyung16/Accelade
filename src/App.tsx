@@ -14,8 +14,11 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Main />}></Route>
-          <Route path="/sector" element={<Sector />}></Route>
-          <Route path="/1" element={<CorporationDetail />}></Route>
+          <Route path="/corporation" element={<Sector />}></Route>
+          <Route
+            path="/corporation/:id"
+            element={<CorporationDetail />}
+          ></Route>
           <Route path="/search" element={<_Search />}></Route>
         </Routes>
       </Router>

@@ -1,24 +1,55 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import Footer from '@components/footer';
+import { _getList } from '@apis/api/corporation';
+
+const sectors = [
+  ['Machine', '기계'],
+  ['Plastic', '플라스틱'],
+  ['Automated System', '자동화'],
+  ['Chemicals', '화학물질'],
+  ['Electronic', '전기/전자'],
+  ['Metal', '금속'],
+  ['Textile', '섬유'],
+  ['ETC', '기타'],
+];
+
+interface listProps {
+  companyName: string;
+  companyType: string;
+  id: number;
+  sector: string[];
+  website: string;
+}
 
 function Sector() {
-  const sectors = [
-    ['Machine', '기계'],
-    ['Plastic', '플라스틱'],
-    ['Automated System', '자동화'],
-    ['Chemicals', '화학물질'],
-    ['Electronic', '전기/전자'],
-    ['Metal', '금속'],
-    ['Textile', '섬유'],
-    ['ETC', '기타'],
-  ];
+  const navigate = useNavigate();
+  const { state } = useLocation();
+  const [list, setList] = useState<listProps[]>([]); // 회사 리스트
+  const [selected, setSelected] = useState(state.sector); // 현재 선택된 분야
+
+  const getList = async () => {
+    const result = await _getList({
+      field: selected ? selected : '기계',
+      pageno: 1, // 일단 기본으로 1, 아직 페이징 처리X
+    });
+    setList(result.data.dataList);
+  };
+
+  useEffect(() => {
+    getList();
+  }, [selected]);
 
   return (
     <SectorLayout>
       <Header>
-        <img src="images/main-logo.svg" />
+        <img
+          src="images/main-logo.svg"
+          onClick={() => {
+            navigate('/');
+          }}
+        />
         <Search>
           <img src="icons/search-icon.svg" />
           <input placeholder="기업명을 검색하세요." />
@@ -28,31 +59,53 @@ function Sector() {
         <Sectors>
           {sectors.map((sector) => {
             return (
-              <div key={sector[0]}>
-                <span>{sector[0]}</span>
-                <span>{sector[1]}</span>
-              </div>
+              <Sector_ key={sector[0]} $color={sector[1] === selected}>
+                <span
+                  onClick={() => {
+                    setSelected(sector[1]);
+                  }}
+                >
+                  {sector[0]}
+                </span>
+                <span
+                  onClick={() => {
+                    setSelected(sector[1]);
+                  }}
+                >
+                  {sector[1]}
+                </span>
+              </Sector_>
             );
           })}
         </Sectors>
-        <CorporationList>
-          {new Array(10).fill(0).map((_, index) => {
-            return (
-              <Corporation key={index}>
-                <div>
-                  <h6>HQA THO 섬유 주식회사</h6>
+        {list.length ? (
+          <CorporationList>
+            {list.map((value, index) => {
+              return (
+                <Corporation key={index}>
                   <div>
-                    <span>섬유</span>
-                    <span>민간 기업</span>
+                    <h6
+                      onClick={() => {
+                        navigate(`/corporation/${value.id}`);
+                      }}
+                    >
+                      {value.companyName}
+                    </h6>
+                    <div>
+                      {/* {value.sector.map((x: any) => {
+                      return <span key={x}>{x}</span>;
+                    })} */}
+                      <span>{value.sector[0]}</span>
+                      <span>{value.companyType} 기업</span>
+                    </div>
+                    <p>{value.website}</p>
                   </div>
-                  <p>www.hoatho.com.vn</p>
-                </div>
-                <p>자세히</p>
-              </Corporation>
-            );
-          })}
-          <button>기업 더보기</button>
-        </CorporationList>
+                </Corporation>
+              );
+            })}
+            <button>기업 더보기</button>
+          </CorporationList>
+        ) : null}
       </Main>
       <Footer />
     </SectorLayout>
@@ -62,6 +115,7 @@ function Sector() {
 const SectorLayout = styled.div`
   display: flex;
   flex-direction: column;
+  min-width: 1920px;
 `;
 
 const Header = styled.header`
@@ -81,6 +135,7 @@ const Header = styled.header`
   & > img {
     width: 199.573px;
     height: 45.648px;
+    cursor: pointer;
   }
 `;
 
@@ -122,51 +177,13 @@ const Main = styled.main`
   margin: 0 auto;
   margin-top: 80px;
   height: auto;
-  /* min-height: 100%; */
-  /* padding-bottom: 350px; */
+  min-height: calc(100vh - 562px);
 `;
 
 const Sectors = styled.section`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-
-  & > div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-
-    &:nth-child(7) {
-      & > span:nth-child(1) {
-        background: #303d48;
-      }
-    }
-
-    & > span:nth-child(1) {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 92px;
-      height: 92px;
-      border-radius: 100px;
-      background: #00a8bd;
-      color: #fff;
-      font-size: 1.1rem;
-      font-style: normal;
-      font-weight: 600;
-      line-height: 11px;
-      text-align: center;
-    }
-
-    & > span:nth-child(2) {
-      color: rgba(6, 6, 23, 0.8);
-      font-size: 1.6rem;
-      font-style: normal;
-      font-weight: 600;
-      line-height: 16px;
-    }
-  }
 `;
 
 const CorporationList = styled.section`
@@ -209,6 +226,11 @@ const Corporation = styled.div`
       font-style: normal;
       font-weight: 700;
       line-height: 22px;
+      max-width: 480px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      cursor: pointer;
     }
 
     & > div {
@@ -228,12 +250,12 @@ const Corporation = styled.div`
         line-height: 16px;
       }
 
-      & > span:nth-child(1) {
+      & > span {
         background: #00a8bd;
         color: #fff;
       }
 
-      & > span:nth-child(2) {
+      & > span:last-child {
         background: #e4e7e9;
         color: #757575;
       }
@@ -254,6 +276,43 @@ const Corporation = styled.div`
     font-style: normal;
     font-weight: 600;
     line-height: 20px;
+  }
+`;
+
+const Sector_ = styled.div<{ $color: boolean }>`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  & > span:nth-child(1) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 92px;
+    height: 92px;
+    border-radius: 100px;
+    background: ${(props) => (props.$color ? '#303d48' : '#00a8bd')};
+    color: #fff;
+    font-size: 1.1rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 11px;
+    text-align: center;
+    cursor: pointer;
+
+    &:hover {
+      background: #303d48;
+    }
+  }
+
+  & > span:nth-child(2) {
+    color: rgba(6, 6, 23, 0.8);
+    font-size: 1.6rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 16px;
+    cursor: pointer;
   }
 `;
 
