@@ -137,27 +137,31 @@ function CorporationDetail() {
         <InformationBox>
           <div>
             <span>회사</span>
-            <p>{info?.companyName}</p>
+            <p>{info?.companyName ? info?.companyName : 'N/A'}</p>
           </div>
           <div>
             <span>공장</span>
-            <p>{info?.companyInfo.factory}</p>
+            <p>
+              {info?.companyInfo.factory ? info?.companyInfo.factory : 'N/A'}
+            </p>
           </div>
           <div>
             <span>담당자</span>
-            <p>{info?.companyInfo.manager}</p>
+            <p>
+              {info?.companyInfo.manager ? info?.companyInfo.manager : 'N/A'}
+            </p>
           </div>
           <div>
             <span>Tel</span>
-            <p>{info?.companyInfo.tell}</p>
+            <p>{info?.companyInfo.tell ? info?.companyInfo.tell : 'N/A'}</p>
           </div>
           <div>
             <span>Email</span>
-            <p>{info?.companyInfo.email}</p>
+            <p>{info?.companyInfo.email ? info?.companyInfo.email : 'N/A'}</p>
           </div>
           <div>
             <span>Fax</span>
-            <p>{info?.companyInfo.FAX}</p>
+            <p>{info?.companyInfo.FAX ? info?.companyInfo.FAX : 'N/A'}</p>
           </div>
         </InformationBox>
         <button>문의</button>
@@ -166,7 +170,10 @@ function CorporationDetail() {
         <Overview>
           <h3>기업 개요</h3>
           <div>
-            {info?.companyOverview.info.map((x) => {
+            {info?.companyOverview.info.map((x, index) => {
+              if (index === 4) {
+                x = '자본 구조 100%';
+              }
               return <span key={x}>{x}</span>;
             })}
           </div>
@@ -197,12 +204,16 @@ function CorporationDetail() {
             <p>주요 고객</p>
             <div>
               {info?.customersItems.customer.map((customer) => {
+                if (customer.trim().length === 0) return;
                 return <span key={customer}>{customer}</span>;
               })}
             </div>
           </div>
           <div>
             {dummy4.map((x) => {
+              if (!x[1]) {
+                x[1] = 'N/A';
+              }
               return (
                 <div key={x[0]}>
                   <span>{x[0]}</span>
@@ -213,6 +224,9 @@ function CorporationDetail() {
           </div>
           <div>
             {dummy5.map((x) => {
+              if (!x[1]) {
+                x[1] = 'N/A';
+              }
               return (
                 <div key={x[0]}>
                   <span>{x[0]}</span>
@@ -244,6 +258,9 @@ function CorporationDetail() {
           </div>
           <div>
             {dummy7.map((x) => {
+              if (!x[1]) {
+                x[1] = 'N/A';
+              }
               return (
                 <div key={x[0]}>
                   <span>{x[0]}</span>
@@ -310,6 +327,7 @@ function CorporationDetail() {
 
 const CorporationDetailLayout = styled.div`
   width: 100%;
+  min-width: 1920px;
 `;
 
 const CorporationInfo = styled.section`
@@ -347,6 +365,7 @@ const TitleBox = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+
   & > div {
     display: flex;
     flex-direction: column;
@@ -547,7 +566,7 @@ const Business = styled.section`
   background: #fff;
   width: 1200px;
   height: auto;
-  padding: 30px 0px 40px 30px;
+  padding: 30px 30px 40px 30px;
   gap: 30px;
 
   & > h3 {
@@ -581,6 +600,7 @@ const Business = styled.section`
         font-style: normal;
         font-weight: 600;
         line-height: 18px;
+        white-space: nowrap;
       }
     }
 
@@ -604,6 +624,7 @@ const Business = styled.section`
       flex-direction: row;
       align-items: center;
       gap: 10px;
+      flex-wrap: wrap;
 
       & > span {
         color: #0b0a0a;
@@ -614,6 +635,7 @@ const Business = styled.section`
         padding: 8px 10px;
         border-radius: 10px;
         background: #e4e7e9;
+        white-space: nowrap;
       }
 
       & > p {
@@ -630,6 +652,7 @@ const Business = styled.section`
   & > div:nth-child(4) {
     display: flex;
     gap: 15px;
+    flex-wrap: wrap;
 
     & > div {
       display: flex;
@@ -646,6 +669,7 @@ const Business = styled.section`
         padding: 8px 10px;
         border-radius: 10px;
         background: #e4e7e9;
+        white-space: nowrap;
       }
 
       & > p {

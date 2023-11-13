@@ -137,7 +137,7 @@ function HOME() {
                   </div>
                   <div
                     onClick={() => {
-                      navigate('/1');
+                      alert('준비중입니다.');
                     }}
                   >
                     <div>
