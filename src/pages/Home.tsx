@@ -1,24 +1,67 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { styled } from 'styled-components';
 import Footer from '@components/footer';
 import { useNavigate } from 'react-router-dom';
 
+const vitenam_db_center1 = [
+  ['Machine', '기계'],
+  ['Plastic', '플라스틱'],
+  ['Automated System', '자동화'],
+  ['Chemicals', '화학물질'],
+];
+
+const vitenam_db_center2 = [
+  ['Electronic', '전기/전자'],
+  ['Metal', '금속'],
+  ['Textile', '섬유'],
+  ['ETC', '기타'],
+];
+
+let PDF = ['3Os', '7.PROFILE VIET NHAT PRO 2023', '665_hungdung', 'AAA'];
+
+const PDF2 = [
+  'ABH',
+  'Accuracy',
+  'AMA Bac Ninh JSC - Corporate Profile',
+  'DIGMAN VIETNAM',
+  'DKBIKE',
+  'EPT',
+  'excelpoint',
+  'GP Holdings',
+  'Hawee',
+  'HONG KY',
+  'ISM',
+  'M1',
+  'MAVIN',
+  'Phuong Dong General Hospital',
+  'ROSTEK',
+  'SOTAVILLE',
+  'Sun Health Gloves',
+  'THABILABCO',
+  'The Greenmart Vietnam_0',
+  'VANLONG',
+  'VEAM',
+];
+
 function HOME() {
   const navigate = useNavigate();
+  const [search, setSearch] = useState(''); // 검색어
+  const [pdfList, setPdfList] = useState([...PDF]);
 
-  const vitenam_db_center1 = [
-    ['Machine', '기계'],
-    ['Plastic', '플라스틱'],
-    ['Automated System', '자동화'],
-    ['Chemicals', '화학물질'],
-  ];
+  // 검색칸에서 엔터를 눌렀을 경우
+  const handleOnSearchKeyPress = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.key === 'Enter') {
+      if (search.length === 0) {
+        return;
+      }
+      navigate(`/search?val=${search}`);
+    }
+  };
 
-  const vitenam_db_center2 = [
-    ['Electronic', '전기/전자'],
-    ['Metal', '금속'],
-    ['Textile', '섬유'],
-    ['ETC', '기타'],
-  ];
+  const onClickMore = () => {
+    PDF = [...PDF, ...PDF2];
+    setPdfList(PDF);
+  };
 
   return (
     <HomeLayout>
@@ -32,7 +75,13 @@ function HOME() {
         </Video>
         <Main_Search>
           <img src="icons/search-icon.svg" />
-          <input placeholder="기업명을 검색하세요." />
+          <input
+            placeholder="기업명을 검색하세요."
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setSearch(e.target.value);
+            }}
+            onKeyDown={handleOnSearchKeyPress}
+          />
         </Main_Search>
         <Main_DBCenter>
           <DBCenter>
@@ -129,33 +178,34 @@ function HOME() {
         <Main_Corporation>
           <h3>한국 기업과 비지니스 매칭을 원하는 기업</h3>
           <Corporation_List>
-            {new Array(4).fill(0).map((_, index) => {
+            {pdfList.map((pdf, index) => {
               return (
-                <Corporation key={index}>
+                <Corporation
+                  key={index}
+                  href={`/assets/pdf/${pdf}.pdf`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <div>
-                    <img src="/images/corporation-image1.jpg" />
+                    <img src={`/assets/pdfImage/${pdf}.png`} />
                   </div>
-                  <div
-                    onClick={() => {
-                      alert('준비중입니다.');
-                    }}
-                  >
+                  <div>
                     <div>
-                      <h5>VEAM</h5>
-                      <p>www.veamcorp.com</p>
+                      <h5>{pdf}</h5>
+                      {/* <p>www.veamcorp.com</p> */}
                     </div>
-                    <div>
+                    {/* <div>
                       <div>
                         <span>자동차 조립</span>
                         <span>민간 기업</span>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </Corporation>
               );
             })}
           </Corporation_List>
-          <button>기업 더보기</button>
+          <button onClick={onClickMore}>기업 더보기</button>
         </Main_Corporation>
       </Main>
       <Footer />
@@ -337,6 +387,7 @@ const Main_Corporation = styled.section`
     font-style: normal;
     font-weight: 700;
     line-height: 20px;
+    cursor: pointer;
   }
 `;
 
@@ -348,7 +399,7 @@ const Corporation_List = styled.div`
   margin-bottom: 80px;
 `;
 
-const Corporation = styled.div`
+const Corporation = styled.a`
   height: 340px;
   width: 285px;
 
