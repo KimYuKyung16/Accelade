@@ -56,8 +56,8 @@ function CorporationDetail() {
   // ];
 
   const dummy2 = [
-    ['자본금', '5,000,000 VND'],
-    ['최근 매출', '4,000,000 VND'],
+    ['자본금', info?.companyOverview.capital],
+    ['최근 매출', info?.companyOverview.recentSales],
     ['총 자산', '21,692,087 VND'],
     ['단기 자산', '16,723,565 VND'],
     ['장기 자산', '4,968,522 VND'],
