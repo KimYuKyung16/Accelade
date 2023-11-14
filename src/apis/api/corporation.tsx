@@ -35,3 +35,24 @@ export const _getCorporationInfo = async (id: string) => {
     };
   }
 };
+
+interface InfoProps {
+  keyword: string;
+  pageno: number;
+}
+
+export const _getSearchedList = async (info: InfoProps) => {
+  try {
+    const { data, status } = await defaultInstance.get(
+      `/excels/search?keyword=${info.keyword}&pageno=${info.pageno}`
+    );
+    return { data, status };
+  } catch (e: any) {
+    console.log(e);
+    return {
+      error: e.response.data.detail, // error 상세사항
+      status: e.response.status, // error status
+      code: e.response.data.code, // error 코드
+    };
+  }
+};

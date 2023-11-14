@@ -28,18 +28,79 @@ function Sector() {
   const { state } = useLocation();
   const [list, setList] = useState<listProps[]>([]); // 회사 리스트
   const [selected, setSelected] = useState(state.sector); // 현재 선택된 분야
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [startNum, setStartNum] = useState<number>(0); // 패이지 시작 번호
+  const [btnVisible, setBtnVisible] = useState<{
+    left: boolean;
+    right: boolean;
+  }>({ left: false, right: true }); // 좌우 버튼 가시성 여부
+  const [search, setSearch] = useState(''); // 검색어
+
+  // 검색칸에서 엔터를 눌렀을 경우
+  const handleOnSearchKeyPress = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.key === 'Enter') {
+      if (search.length === 0) {
+        return;
+      }
+      navigate(`/search?val=${search}`);
+    }
+  };
+
+  /* 페이지 버튼 생성하기 */
+  const create_PageBtn = () => {
+    const buttonArray = [];
+    const start = startNum * 10 + 1;
+    let last = start + 9;
+    last = last >= totalPages ? totalPages : last;
+    for (let i = start; i <= last; i++) {
+      buttonArray.push(
+        <button
+          key={i}
+          onClick={() => {
+            setCurrentPage(i);
+          }}
+        >
+          {i}
+        </button>
+      );
+    }
+    return buttonArray;
+  };
 
   const getList = async () => {
     const result = await _getList({
       field: selected ? selected : '기계',
-      pageno: 1, // 일단 기본으로 1, 아직 페이징 처리X
+      pageno: currentPage, // 일단 기본으로 1, 아직 페이징 처리X
     });
     setList(result.data.dataList);
+    setTotalPages(result.data.totalPages);
   };
 
   useEffect(() => {
     getList();
+  }, [selected, currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+    setStartNum(0);
   }, [selected]);
+
+  /* 버튼 생성 여부 */
+  useEffect(() => {
+    if (totalPages <= 10) setBtnVisible({ left: false, right: false });
+    else if (currentPage >= 1 && currentPage <= 10) {
+      setBtnVisible({ left: false, right: true });
+    } else if (startNum + 1 >= Number(totalPages / 10)) {
+      setBtnVisible({ left: true, right: false });
+    } else {
+      setBtnVisible({ left: true, right: true });
+    }
+  }, [totalPages, currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(startNum * 10 + 1);
+  }, [startNum]);
 
   return (
     <SectorLayout>
@@ -52,7 +113,13 @@ function Sector() {
         />
         <Search>
           <img src="icons/search-icon.svg" />
-          <input placeholder="기업명을 검색하세요." />
+          <input
+            placeholder="기업명을 검색하세요."
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setSearch(e.target.value);
+            }}
+            onKeyDown={handleOnSearchKeyPress}
+          />
         </Search>
       </Header>
       <Main>
@@ -103,7 +170,42 @@ function Sector() {
                 </Corporation>
               );
             })}
-            <button>기업 더보기</button>
+            <Pagination>
+              <MoveBtn
+                $visible={btnVisible.left}
+                onClick={() => {
+                  setStartNum((value) => value - 1);
+                }}
+                type="button"
+                value="<"
+              />
+              {create_PageBtn()}
+              <MoveBtn
+                $visible={btnVisible.right}
+                onClick={() => {
+                  setStartNum((value) => value + 1);
+                }}
+                type="button"
+                value=">"
+              />
+              {/* {new Array(totalPages).fill(0).map((_, index) => {
+                return (
+                  <PageBtn
+                    key={index}
+                    onClick={(
+                      e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+                    ) => {
+                      setSelectedPage(
+                        Number((e.target as HTMLElement).innerText)
+                      );
+                    }}
+                    $color={index + 1 === selectedPage}
+                  >
+                    {index + 1}
+                  </PageBtn>
+                );
+              })} */}
+            </Pagination>
           </CorporationList>
         ) : null}
       </Main>
@@ -111,6 +213,54 @@ function Sector() {
     </SectorLayout>
   );
 }
+
+interface IVisible_Props {
+  $visible: boolean;
+}
+
+const MoveBtn = styled.input<IVisible_Props>`
+  display: ${(props: IVisible_Props) =>
+    props.$visible === true ? 'visible' : 'none'};
+  width: 40px;
+  height: 40px;
+  background-color: #6663ff;
+  color: #ffffff;
+  border-radius: 10px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+`;
+
+// const PageBtn = styled.button<{ $color: boolean }>`
+//   width: 40px;
+//   /* padding: 0 15px; */
+//   height: 40px;
+//   background-color: ${(props) => (props.$color ? '#3e3cb7' : '#6663ff')};
+//   color: #ffffff;
+//   border-radius: 10px;
+//   font-size: 1.5rem;
+//   font-weight: 600;
+//   cursor: pointer;
+// `;
+
+const Pagination = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 80px;
+
+  & > button {
+    width: 40px;
+    height: 40px;
+    background-color: #6663ff;
+    color: #ffffff;
+    border-radius: 10px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+`;
 
 const SectorLayout = styled.div`
   display: flex;
@@ -192,7 +342,7 @@ const CorporationList = styled.section`
   align-items: center;
   margin-bottom: 130px;
 
-  & > button {
+  /* & > button {
     height: 46px;
     padding: 12px 95px;
     border-radius: 100px;
@@ -202,8 +352,8 @@ const CorporationList = styled.section`
     font-style: normal;
     font-weight: 700;
     line-height: 20px;
-    margin-top: 80px;
-  }
+
+  } */
 `;
 
 const Corporation = styled.div`
