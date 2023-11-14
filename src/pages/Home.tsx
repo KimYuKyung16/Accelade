@@ -47,6 +47,7 @@ function HOME() {
   const navigate = useNavigate();
   const [search, setSearch] = useState(''); // 검색어
   const [pdfList, setPdfList] = useState([...PDF]);
+  const [btnVisible, setBtnVisible] = useState(true);
 
   // 검색칸에서 엔터를 눌렀을 경우
   const handleOnSearchKeyPress = (e: React.KeyboardEvent<HTMLElement>) => {
@@ -61,6 +62,7 @@ function HOME() {
   const onClickMore = () => {
     PDF = [...PDF, ...PDF2];
     setPdfList(PDF);
+    setBtnVisible(false);
   };
 
   return (
@@ -205,13 +207,29 @@ function HOME() {
               );
             })}
           </Corporation_List>
-          <button onClick={onClickMore}>기업 더보기</button>
+          <MoreBtn onClick={onClickMore} $visible={btnVisible}>
+            기업 더보기
+          </MoreBtn>
         </Main_Corporation>
       </Main>
       <Footer />
     </HomeLayout>
   );
 }
+
+const MoreBtn = styled.button<{ $visible: boolean }>`
+  display: ${(props) => (props.$visible ? 'block' : 'none')};
+  height: 46px;
+  padding: 12px 95px;
+  border-radius: 100px;
+  background: #6663ff;
+  color: #fff;
+  font-size: 1.8rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 20px;
+  cursor: pointer;
+`;
 
 const Main_Info = styled.section`
   display: flex;
@@ -375,19 +393,6 @@ const Main_Corporation = styled.section`
     font-weight: 700;
     line-height: 34px;
     margin-bottom: 40px;
-  }
-
-  & > button {
-    height: 46px;
-    padding: 12px 95px;
-    border-radius: 100px;
-    background: #6663ff;
-    color: #fff;
-    font-size: 1.8rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 20px;
-    cursor: pointer;
   }
 `;
 
