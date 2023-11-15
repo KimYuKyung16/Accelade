@@ -132,7 +132,7 @@ function CorporationDetail() {
             <h1>{info?.title}</h1>
             <p>{info?.website}</p>
           </div>
-          <img src="/images/corporation-logo.svg" />
+          {/* <img src="/images/corporation-logo.svg" /> */}
         </TitleBox>
         <InformationBox>
           <div>
