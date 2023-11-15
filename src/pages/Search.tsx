@@ -34,6 +34,8 @@ function _Search() {
         return;
       }
       getSearchedList();
+      setCurrentPage(1);
+      setStartNum(0);
     }
   };
 
