@@ -17,7 +17,7 @@ const vitenam_db_center2 = [
   ['ETC', '기타'],
 ];
 
-let PDF = ['3Os', '7.PROFILE VIET NHAT PRO 2023', '665_hungdung', 'AAA'];
+const PDF = ['3Os', '7.PROFILE VIET NHAT PRO 2023', '665_hungdung', 'AAA'];
 
 const PDF2 = [
   'ABH',
@@ -60,8 +60,7 @@ function HOME() {
   };
 
   const onClickMore = () => {
-    PDF = [...PDF, ...PDF2];
-    setPdfList(PDF);
+    setPdfList((val) => [...val, ...PDF2]);
     setBtnVisible(false);
   };
 
