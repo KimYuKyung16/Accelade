@@ -275,7 +275,7 @@ function CorporationDetail() {
             })}
           </div> */}
         </Technology>
-        <Facility>
+        {/* <Facility>
           <h3>시설현황</h3>
           <table>
             <tr>
@@ -318,7 +318,7 @@ function CorporationDetail() {
               <td>&nbsp;</td>
             </tr>
           </table>
-        </Facility>
+        </Facility> */}
       </Main>
       <Footer />
     </CorporationDetailLayout>
