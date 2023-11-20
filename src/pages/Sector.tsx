@@ -50,8 +50,8 @@ function Sector() {
   /* 페이지 버튼 생성하기 */
   const create_PageBtn = () => {
     const buttonArray = [];
-    const start = startNum * 10 + 1;
-    let last = start + 9;
+    const start = startNum * 5 + 1;
+    let last = start + 4;
     last = last >= totalPages ? totalPages : last;
     for (let i = start; i <= last; i++) {
       buttonArray.push(
@@ -88,10 +88,10 @@ function Sector() {
 
   /* 버튼 생성 여부 */
   useEffect(() => {
-    if (totalPages <= 10) setBtnVisible({ left: false, right: false });
-    else if (currentPage >= 1 && currentPage <= 10) {
+    if (totalPages <= 5) setBtnVisible({ left: false, right: false });
+    else if (currentPage >= 1 && currentPage <= 5) {
       setBtnVisible({ left: false, right: true });
-    } else if (startNum + 1 >= Number(totalPages / 10)) {
+    } else if (startNum + 1 >= Number(totalPages / 5)) {
       setBtnVisible({ left: true, right: false });
     } else {
       setBtnVisible({ left: true, right: true });
@@ -99,7 +99,7 @@ function Sector() {
   }, [totalPages, currentPage]);
 
   useEffect(() => {
-    setCurrentPage(startNum * 10 + 1);
+    setCurrentPage(startNum * 5 + 1);
   }, [startNum]);
 
   return (
@@ -145,50 +145,54 @@ function Sector() {
             );
           })}
         </Sectors>
-        {list.length ? (
-          <CorporationList>
-            {list.map((value, index) => {
+
+        <CorporationList>
+          {list &&
+            list?.map((value, index) => {
               return (
                 <Corporation key={index}>
                   <div>
-                    <h6
-                      onClick={() => {
-                        navigate(`/corporation/${value.id}`);
-                      }}
-                    >
-                      {value.companyName}
-                    </h6>
                     <div>
-                      {/* {value.sector.map((x: any) => {
+                      <h6
+                        onClick={() => {
+                          navigate(`/corporation/${value.id}`);
+                        }}
+                      >
+                        {value.companyName}
+                      </h6>
+                      <div>
+                        {/* {value.sector.map((x: any) => {
                       return <span key={x}>{x}</span>;
                     })} */}
-                      <span>{value.sector[0]}</span>
-                      <span>{value.companyType} 기업</span>
+                        <span>{value.sector[0]}</span>
+                        <span>{value.companyType} 기업</span>
+                      </div>
                     </div>
+
                     <p>{value.website}</p>
                   </div>
                 </Corporation>
               );
             })}
-            <Pagination>
-              <MoveBtn
-                $visible={btnVisible.left}
-                onClick={() => {
-                  setStartNum((value) => value - 1);
-                }}
-                type="button"
-                value="<"
-              />
-              {create_PageBtn()}
-              <MoveBtn
-                $visible={btnVisible.right}
-                onClick={() => {
-                  setStartNum((value) => value + 1);
-                }}
-                type="button"
-                value=">"
-              />
-              {/* {new Array(totalPages).fill(0).map((_, index) => {
+          <Pagination>
+            <MoveBtn
+              $visible={btnVisible.left}
+              onClick={() => {
+                setStartNum((value) => value - 1);
+              }}
+              type="button"
+              value="<"
+            />
+            {create_PageBtn()}
+            <MoveBtn
+              $visible={btnVisible.right}
+              onClick={() => {
+                setStartNum((value) => value + 1);
+              }}
+              type="button"
+              value=">"
+            />
+            {/* {new Array(totalPages).fill(0).map((_, index) => {
                 return (
                   <PageBtn
                     key={index}
@@ -205,9 +209,8 @@ function Sector() {
                   </PageBtn>
                 );
               })} */}
-            </Pagination>
-          </CorporationList>
-        ) : null}
+          </Pagination>
+        </CorporationList>
       </Main>
       <Footer />
     </SectorLayout>
@@ -224,11 +227,16 @@ const MoveBtn = styled.input<IVisible_Props>`
   width: 40px;
   height: 40px;
   background-color: #6663ff;
-  color: #ffffff;
+  background: none;
+  color: #4d4d4d;
   border-radius: 10px;
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 600;
   cursor: pointer;
+
+  @media screen and (max-width: 768px) {
+    font-size: 1.5rem;
+  }
 `;
 
 // const PageBtn = styled.button<{ $color: boolean }>`
@@ -253,39 +261,58 @@ const Pagination = styled.div`
   & > button {
     width: 40px;
     height: 40px;
-    background-color: #6663ff;
-    color: #ffffff;
+    background: none;
+    color: #4d4d4d;
     border-radius: 10px;
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: 600;
     cursor: pointer;
+  }
+
+  @media screen and (max-width: 768px) {
+    gap: 0px;
+    margin-top: 50px;
+
+    & > button {
+      font-size: 1.5rem;
+    }
   }
 `;
 
 const SectorLayout = styled.div`
   display: flex;
   flex-direction: column;
-  min-width: 1920px;
+  align-items: flex-start;
+  /* min-width: 1920px; */
 `;
 
 const Header = styled.header`
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin-bottom: 80px;
   gap: 50px;
   width: 100%;
-  min-width: 1920px;
   width: 100%;
-  padding: 0 360px;
-  max-width: 1920px;
-  margin: 0 auto;
-  margin-top: 80px;
+  max-width: 1200px;
+  margin: 80px auto;
+  padding: 0 20px;
 
   & > img {
     width: 199.573px;
     height: 45.648px;
     cursor: pointer;
+  }
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 21px;
+    margin: 21px auto;
+
+    & > img {
+      height: 25.563px;
+      width: 111.761px;
+    }
   }
 `;
 
@@ -303,7 +330,7 @@ const Search = styled.section`
   & > input {
     background: none;
     width: 100%;
-    padding: 13px 0;
+    padding: 13px 24px 13px 0;
     font-size: 1.8rem;
     font-style: normal;
     font-weight: 500;
@@ -313,6 +340,25 @@ const Search = styled.section`
       color: rgba(6, 6, 23, 0.6);
     }
   }
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    padding-left: 20px;
+    gap: 8px;
+
+    & > img {
+      width: 16px;
+    }
+
+    & > input {
+      padding: 15px 20px 15px 0px;
+      font-size: 1.6rem;
+
+      &::placeholder {
+        color: rgba(6, 6, 23, 0.6);
+      }
+    }
+  }
 `;
 
 const Main = styled.main`
@@ -320,20 +366,31 @@ const Main = styled.main`
   flex-direction: column;
   gap: 80px;
   width: 100%;
-  min-width: 1920px;
-  width: 100%;
-  padding: 0 360px;
-  max-width: 1920px;
+  /* min-width: 1200px; */
+  /* padding: 0 360px; */
+  max-width: 1200px;
   margin: 0 auto;
-  margin-top: 80px;
+  /* margin-top: 80px; */
   height: auto;
   min-height: calc(100vh - 562px);
+  padding: 0 20px;
+
+  @media screen and (max-width: 768px) {
+    gap: 44px;
+    min-height: calc(100vh - 224px);
+  }
 `;
 
 const Sectors = styled.section`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  @media screen and (max-width: 768px) {
+    /* justify-content: center; */
+  }
 `;
 
 const CorporationList = styled.section`
@@ -341,73 +398,78 @@ const CorporationList = styled.section`
   flex-direction: column;
   align-items: center;
   margin-bottom: 130px;
+  min-height: 500px;
+  /* background-color: azure; */
 
-  /* & > button {
-    height: 46px;
-    padding: 12px 95px;
-    border-radius: 100px;
-    background: #6663ff;
-    color: #fff;
-    font-size: 1.8rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 20px;
-
-  } */
+  @media screen and (max-width: 768px) {
+    margin-bottom: 115px;
+    min-height: 200px;
+  }
 `;
 
 const Corporation = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   width: 100%;
   padding: 25px 0;
   border-bottom: 1px solid #e4e7e9;
 
   & > div {
+    width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     gap: 15px;
-
-    & > h6 {
-      color: #060617;
-      font-size: 1.8rem;
-      font-style: normal;
-      font-weight: 700;
-      line-height: 22px;
-      max-width: 480px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      cursor: pointer;
-    }
+    /* background-color: #757575; */
 
     & > div {
       display: flex;
       flex-direction: row;
-      gap: 6px;
+      gap: 15px;
+      width: 70%;
+      /* background-color: aqua; */
 
-      & > span {
-        border-radius: 8px;
-        display: flex;
-        padding: 5px 10px;
-        justify-content: center;
-        align-items: center;
-        font-size: 1.4rem;
+      & > h6 {
+        color: #060617;
+        font-size: 1.8rem;
         font-style: normal;
-        font-weight: 600;
-        line-height: 16px;
+        font-weight: 700;
+        line-height: 22px;
+        max-width: 60%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
       }
 
-      & > span {
-        background: #00a8bd;
-        color: #fff;
-      }
+      & > div {
+        display: flex;
+        flex-direction: row;
+        gap: 6px;
 
-      & > span:last-child {
-        background: #e4e7e9;
-        color: #757575;
+        & > span {
+          border-radius: 8px;
+          display: flex;
+          padding: 5px 10px;
+          justify-content: center;
+          align-items: center;
+          font-size: 1.4rem;
+          font-style: normal;
+          font-weight: 600;
+          line-height: 16px;
+          white-space: nowrap;
+        }
+
+        & > span {
+          background: #00a8bd;
+          color: #fff;
+        }
+
+        & > span:last-child {
+          background: #e4e7e9;
+          color: #757575;
+        }
       }
     }
 
@@ -416,16 +478,45 @@ const Corporation = styled.div`
       font-size: 1.6rem;
       font-style: normal;
       font-weight: 400;
-      line-height: 20px;
+      width: 30%;
+      word-break: break-all;
+      text-align: right;
     }
   }
 
-  & > p {
-    color: rgba(6, 6, 23, 0.6);
-    font-size: 1.6rem;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 20px;
+  @media screen and (max-width: 768px) {
+    padding: 14px 0;
+
+    & > div {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+
+      & > div {
+        flex-direction: column-reverse;
+        gap: 4px;
+        width: 100%;
+
+        // 회사명
+        & > h6 {
+          max-width: 100%;
+          font-size: 1.6rem;
+        }
+
+        & > div {
+          & > span {
+            padding: 4px 8px;
+            font-size: 1.2rem;
+          }
+        }
+      }
+
+      & > p {
+        font-size: 1.2rem;
+        text-align: left;
+        width: 100%;
+      }
+    }
   }
 `;
 
@@ -463,6 +554,25 @@ const Sector_ = styled.div<{ $color: boolean }>`
     font-weight: 600;
     line-height: 16px;
     cursor: pointer;
+  }
+
+  @media screen and (max-width: 768px) {
+    gap: 5px;
+
+    & > span:nth-child(1) {
+      width: 72px;
+      height: 72px;
+      font-size: 1.2rem;
+    }
+
+    & > span:nth-child(2) {
+      color: rgba(6, 6, 23, 0.8);
+      font-size: 1.6rem;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 16px;
+      cursor: pointer;
+    }
   }
 `;
 
