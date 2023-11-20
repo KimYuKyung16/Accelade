@@ -48,7 +48,7 @@ export const _getSearchedList = async (info: InfoProps) => {
     );
     return { data, status };
   } catch (e: any) {
-    console.log(e);
+    // console.log(e);
     return {
       error: e.response.data.detail, // error 상세사항
       status: e.response.status, // error status
