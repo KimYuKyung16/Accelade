@@ -343,7 +343,7 @@ const Main = styled.main`
   margin: 0 auto;
   height: auto;
   /* margin-bottom: 330px; */
-  min-height: calc(100vh - 562px);
+  min-height: calc(100vh - 349px);
   /* min-height: 100vh; */
   padding: 0 20px;
 
