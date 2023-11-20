@@ -54,8 +54,8 @@ function _Search() {
   /* 페이지 버튼 생성하기 */
   const create_PageBtn = () => {
     const buttonArray = [];
-    const start = startNum * 10 + 1;
-    let last = start + 9;
+    const start = startNum * 5 + 1;
+    let last = start + 4;
     last = last >= totalPages ? totalPages : last;
     for (let i = start; i <= last; i++) {
       buttonArray.push(
@@ -78,10 +78,10 @@ function _Search() {
 
   /* 버튼 생성 여부 */
   useEffect(() => {
-    if (totalPages <= 10) setBtnVisible({ left: false, right: false });
-    else if (currentPage >= 1 && currentPage <= 10) {
+    if (totalPages <= 5) setBtnVisible({ left: false, right: false });
+    else if (currentPage >= 1 && currentPage <= 5) {
       setBtnVisible({ left: false, right: true });
-    } else if (startNum + 1 >= Number(totalPages / 10)) {
+    } else if (startNum + 1 >= Number(totalPages / 5)) {
       setBtnVisible({ left: true, right: false });
     } else {
       setBtnVisible({ left: true, right: true });
@@ -89,7 +89,7 @@ function _Search() {
   }, [totalPages, currentPage]);
 
   useEffect(() => {
-    setCurrentPage(startNum * 10 + 1);
+    setCurrentPage(startNum * 5 + 1);
   }, [startNum]);
 
   return (
@@ -122,20 +122,23 @@ function _Search() {
             return (
               <Corporation key={index}>
                 <div>
-                  <h6
-                    onClick={() => {
-                      navigate(`/corporation/${company.id}`);
-                    }}
-                  >
-                    {company.companyName}
-                  </h6>
                   <div>
-                    {/* {company.sector.map((x) => {
+                    <h6
+                      onClick={() => {
+                        navigate(`/corporation/${company.id}`);
+                      }}
+                    >
+                      {company.companyName}
+                    </h6>
+                    <div>
+                      {/* {company.sector.map((x) => {
                         return <span key={x}>{x}</span>;
                       })} */}
-                    <span>{company.sector[0]}</span>
-                    <span>{company.companyType} 기업</span>
+                      <span>{company.sector[0]}</span>
+                      <span>{company.companyType} 기업</span>
+                    </div>
                   </div>
+
                   <p>{company.website}</p>
                 </div>
               </Corporation>
@@ -192,11 +195,16 @@ const MoveBtn = styled.input<IVisible_Props>`
   width: 40px;
   height: 40px;
   background-color: #6663ff;
-  color: #ffffff;
+  background: none;
+  color: #4d4d4d;
   border-radius: 10px;
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 600;
   cursor: pointer;
+
+  @media screen and (max-width: 768px) {
+    font-size: 1.5rem;
+  }
 `;
 
 // const PageBtn = styled.button<{ $color: boolean }>`
@@ -216,16 +224,28 @@ const Pagination = styled.div`
   flex-direction: row;
   justify-content: center;
   gap: 10px;
+  margin-top: 80px;
+  margin-bottom: 130px;
 
   & > button {
     width: 40px;
     height: 40px;
-    background-color: #6663ff;
-    color: #ffffff;
+    background: none;
+    color: #4d4d4d;
     border-radius: 10px;
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: 600;
     cursor: pointer;
+  }
+
+  @media screen and (max-width: 768px) {
+    gap: 0px;
+    margin-top: 50px;
+    margin-bottom: 115px;
+
+    & > button {
+      font-size: 1.5rem;
+    }
   }
 `;
 
@@ -233,26 +253,40 @@ const SearchLayout = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-width: 1920px;
+  align-items: flex-start;
+  /* min-width: 1920px; */
+  /* max-width: 1200px; */
 `;
 
 const Header = styled.header`
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin-bottom: 80px;
   gap: 50px;
   /* min-width: 1920px; */
   width: 100%;
   /* padding: 0 360px; */
   /* max-width: 1920px; */
-  margin: 0 auto;
-  margin-top: 80px;
+  max-width: 1200px;
+  margin: 80px auto;
+  /* padding: 0 20px; */
 
   & > img {
     width: 199.573px;
     height: 45.648px;
     cursor: pointer;
+  }
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 21px;
+    margin: 21px auto;
+
+    & > img {
+      height: 25.563px;
+      width: 111.761px;
+    }
   }
 `;
 
@@ -280,26 +314,44 @@ const Search = styled.section`
       color: rgba(6, 6, 23, 0.6);
     }
   }
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    padding-left: 20px;
+    gap: 8px;
+
+    & > img {
+      width: 16px;
+    }
+
+    & > input {
+      padding: 15px 20px 15px 0px;
+      font-size: 1.6rem;
+
+      &::placeholder {
+        color: rgba(6, 6, 23, 0.6);
+      }
+    }
+  }
 `;
 
 const Main = styled.main`
   display: flex;
   flex-direction: column;
-  gap: 50px;
   width: 100%;
-  /* min-width: 1920px; */
-  padding: 0 360px;
-  max-width: 1920px;
+  max-width: 1200px;
   margin: 0 auto;
-  margin-top: 80px;
   height: auto;
-  margin-bottom: 330px;
-  min-height: calc(100vh - 760px);
+  /* margin-bottom: 330px; */
+  min-height: calc(100vh - 562px);
+  /* min-height: 100vh; */
+  padding: 0 20px;
 
   & > div:nth-child(2) {
     display: flex;
     flex-direction: row;
     gap: 15px;
+    margin-bottom: 50px;
 
     & > p:nth-child(1) {
       color: rgba(6, 6, 23, 0.8);
@@ -317,26 +369,26 @@ const Main = styled.main`
       line-height: 20px;
     }
   }
+
+  @media screen and (max-width: 768px) {
+    gap: 0px;
+    min-height: calc(100vh - 224px);
+
+    & > div:nth-child(2) {
+      margin-bottom: 30px;
+    }
+  }
 `;
 
 const CorporationList = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 500px;
   /* margin-bottom: 130px; */
-  margin-bottom: 50px;
 
-  & > button {
-    height: 46px;
-    padding: 12px 95px;
-    border-radius: 100px;
-    background: #6663ff;
-    color: #fff;
-    font-size: 1.8rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 20px;
-    margin-top: 80px;
+  @media screen and (max-width: 768px) {
+    min-height: 200px;
   }
 `;
 
@@ -349,49 +401,60 @@ const Corporation = styled.div`
   border-bottom: 1px solid #e4e7e9;
 
   & > div {
+    width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     gap: 15px;
-
-    & > h6 {
-      color: #060617;
-      font-size: 1.8rem;
-      font-style: normal;
-      font-weight: 700;
-      line-height: 22px;
-      max-width: 480px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      cursor: pointer;
-    }
+    /* background-color: #757575; */
 
     & > div {
       display: flex;
       flex-direction: row;
-      gap: 6px;
+      gap: 15px;
+      width: 70%;
 
-      & > span {
-        border-radius: 8px;
-        display: flex;
-        padding: 5px 10px;
-        justify-content: center;
-        align-items: center;
-        font-size: 1.4rem;
+      & > h6 {
+        color: #060617;
+        font-size: 1.8rem;
         font-style: normal;
-        font-weight: 600;
-        line-height: 16px;
+        font-weight: 700;
+        line-height: 22px;
+        max-width: 60%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
       }
 
-      & > span:nth-child(1) {
-        background: #00a8bd;
-        color: #fff;
-      }
+      & > div {
+        display: flex;
+        flex-direction: row;
+        gap: 6px;
 
-      & > span:nth-child(2) {
-        background: #e4e7e9;
-        color: #757575;
+        & > span {
+          border-radius: 8px;
+          display: flex;
+          padding: 5px 10px;
+          justify-content: center;
+          align-items: center;
+          font-size: 1.4rem;
+          font-style: normal;
+          font-weight: 600;
+          line-height: 16px;
+          white-space: nowrap;
+        }
+
+        & > span {
+          background: #00a8bd;
+          color: #fff;
+        }
+
+        & > span:last-child {
+          background: #e4e7e9;
+          color: #757575;
+        }
       }
     }
 
@@ -400,7 +463,9 @@ const Corporation = styled.div`
       font-size: 1.6rem;
       font-style: normal;
       font-weight: 400;
-      line-height: 20px;
+      width: 30%;
+      word-break: break-all;
+      text-align: right;
     }
   }
 
@@ -410,6 +475,41 @@ const Corporation = styled.div`
     font-style: normal;
     font-weight: 600;
     line-height: 20px;
+  }
+
+  @media screen and (max-width: 768px) {
+    padding: 14px 0;
+
+    & > div {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+
+      & > div {
+        flex-direction: column-reverse;
+        gap: 4px;
+        width: 100%;
+
+        // 회사명
+        & > h6 {
+          max-width: 100%;
+          font-size: 1.6rem;
+        }
+
+        & > div {
+          & > span {
+            padding: 4px 8px;
+            font-size: 1.2rem;
+          }
+        }
+      }
+
+      & > p {
+        font-size: 1.2rem;
+        text-align: left;
+        width: 100%;
+      }
+    }
   }
 `;
 
