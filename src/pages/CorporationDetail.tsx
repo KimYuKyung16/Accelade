@@ -5,6 +5,14 @@ import { styled } from 'styled-components';
 import Footer from '@components/footer';
 import { _getCorporationInfo } from '@apis/api/corporation';
 
+interface facilityStatusProps {
+  machine: string;
+  manuCom: string;
+  manuCoun: string;
+  mode: string;
+  quantity: string;
+}
+
 interface InformationProps {
   title: string;
   website: string;
@@ -30,7 +38,7 @@ interface InformationProps {
     importimgItem: string[];
     rawMaterials: string[];
   };
-  facilityStatus: string[];
+  facilityStatus: facilityStatusProps[];
   fieldTech: {
     currentProd: string;
     field: string[];
@@ -275,50 +283,43 @@ function CorporationDetail() {
             })}
           </div> */}
         </Technology>
-        {/* <Facility>
-          <h3>시설현황</h3>
-          <table>
-            <tr>
-              <th>구분</th>
-              <th>시설명칭</th>
-              <th>수량 (대)</th>
-              <th>제조사</th>
-              <th>제조국</th>
-            </tr>
-            <tr>
-              <td rowSpan={6}>시설</td>
-              <td>&nbsp;</td>
-              <td>&nbsp;</td>
-              <td>&nbsp;</td>
-              <td>&nbsp;</td>
-            </tr>
-
-            <tr>
-              <td>&nbsp;</td>
-              <td>&nbsp;</td>
-              <td>&nbsp;</td>
-              <td>&nbsp;</td>
-            </tr>
-            <tr>
-              <td>&nbsp;</td>
-              <td>&nbsp;</td>
-              <td>&nbsp;</td>
-              <td>&nbsp;</td>
-            </tr>
-            <tr>
-              <td>&nbsp;</td>
-              <td>&nbsp;</td>
-              <td>&nbsp;</td>
-              <td>&nbsp;</td>
-            </tr>
-            <tr>
-              <td>&nbsp;</td>
-              <td>&nbsp;</td>
-              <td>&nbsp;</td>
-              <td>&nbsp;</td>
-            </tr>
-          </table>
-        </Facility> */}
+        {info?.facilityStatus && info?.facilityStatus.length !== 0 ? (
+          <>
+            <Facility>
+              <h3>시설현황</h3>
+              <table>
+                <tr>
+                  <th>구분</th>
+                  <th>시설명칭</th>
+                  <th>수량 (대)</th>
+                  <th>제조사</th>
+                  <th>제조국</th>
+                </tr>
+                <tr>
+                  <td rowSpan={8}>시설</td>
+                </tr>
+                {info?.facilityStatus.map((x, index) => {
+                  return (
+                    <tr key={index}>
+                      <td>{x.machine}</td>
+                      <td>{x.quantity}</td>
+                      <td>{x.manuCom}</td>
+                      <td>{x.manuCoun}</td>
+                    </tr>
+                  );
+                })}
+                {
+                  // <tr>
+                  //   <td>&nbsp;</td>
+                  //   <td>&nbsp;</td>
+                  //   <td>&nbsp;</td>
+                  //   <td>&nbsp;</td>
+                  // </tr>
+                }
+              </table>
+            </Facility>
+          </>
+        ) : null}
       </Main>
       <Footer />
     </CorporationDetailLayout>
@@ -840,14 +841,22 @@ const Facility = styled.div`
 
   & > table {
     border-collapse: collapse;
-    border: 1px solid #444444;
+    /* border: 1px solid #444444; */
+    border-color: red;
     table-layout: fixed;
     width: 1140px;
     border-radius: 12px;
+    border-style: hidden;
+    box-shadow: 0 0 0 1px #666;
+    overflow: hidden;
+
+    /* tr {
+      border: 1px solid #7e839b;
+    } */
 
     th,
     td {
-      border: 1px solid #444444;
+      border: 1px solid #7e839b;
       padding: 12px 35px;
       color: #0b0a0a;
       font-size: 1.6rem;
