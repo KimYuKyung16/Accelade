@@ -13,7 +13,7 @@ export const _getList = async (category: ListProps) => {
     );
     return { data, status };
   } catch (e: any) {
-    console.log(e);
+    // console.log(e);
     return {
       error: e.response.data.detail, // error 상세사항
       status: e.response.status, // error status
@@ -27,7 +27,7 @@ export const _getCorporationInfo = async (id: string) => {
     const { data, status } = await defaultInstance.get(`/excels/${id}`);
     return { data, status };
   } catch (e: any) {
-    console.log(e);
+    // console.log(e);
     return {
       error: e.response.data.detail, // error 상세사항
       status: e.response.status, // error status
