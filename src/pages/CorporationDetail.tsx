@@ -123,7 +123,7 @@ function CorporationDetail() {
   const getCorporationInfo = async () => {
     if (id) {
       const result = await _getCorporationInfo(id);
-      // console.log(result.data);
+      console.log(result.data);
       setInfo(result.data);
     }
   };
@@ -291,9 +291,9 @@ function CorporationDetail() {
                 <tr>
                   <th>구분</th>
                   <th>시설명칭</th>
-                  <th>수량 (대)</th>
+                  {/* <th>수량 (대)</th>
                   <th>제조사</th>
-                  <th>제조국</th>
+                  <th>제조국</th> */}
                 </tr>
                 <tr>
                   <td rowSpan={8}>시설</td>
@@ -302,9 +302,9 @@ function CorporationDetail() {
                   return (
                     <tr key={index}>
                       <td>{x.machine}</td>
-                      <td>{x.quantity}</td>
+                      {/* <td>{x.quantity}</td>
                       <td>{x.manuCom}</td>
-                      <td>{x.manuCoun}</td>
+                      <td>{x.manuCoun}</td> */}
                     </tr>
                   );
                 })}
@@ -869,21 +869,24 @@ const Facility = styled.div`
     th {
       background: #eaf1f4;
 
-      &:nth-child(2) {
+      /* &:nth-child(2) {
         width: 140px;
+      } */
+      &:nth-child(1) {
+        width: 200px;
       }
-      &:nth-child(2) {
+      /* &:nth-child(2) {
         width: 350px;
-      }
-      &:nth-child(3) {
+      } */
+      /* &:nth-child(3) {
         width: 140px;
       }
       &:nth-child(3) {
         width: 310px;
-      }
-      &:nth-child(3) {
+      } */
+      /* &:nth-child(3) {
         width: 200px;
-      }
+      } */
     }
     & > tr:nth-child(2) {
       & > td:nth-child(1) {
