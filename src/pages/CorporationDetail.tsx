@@ -448,6 +448,7 @@ const Main = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
+  min-height: calc(100vh - 1000px);
   background-color: #eef7fb;
   margin: 0 auto;
   padding: 80px 20px 130px 20px;
