@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 import Footer from '@components/footer';
+import Header from '@components/header';
 import { _getCorporationInfo } from '@apis/api/corporation';
 
 interface facilityStatusProps {
@@ -55,14 +56,6 @@ function CorporationDetail() {
   const id = params.id;
   const [info, setInfo] = useState<InformationProps | undefined>(undefined);
 
-  // const dummy1 = [
-  //   '민간 기업',
-  //   '2012년 설립',
-  //   '종업원수 956명',
-  //   '공장면적 13,000m2',
-  //   '자본 구조 100%',
-  // ];
-
   const dummy2 = [
     ['자본금', info?.companyOverview.capital],
     ['최근 매출', info?.companyOverview.recentSales],
@@ -94,19 +87,6 @@ function CorporationDetail() {
     ],
   ];
 
-  // const dummy6 = [
-  //   '원사제품',
-  //   '재킷',
-  //   '미니스커트',
-  //   '반바지',
-  //   '남녀 진/카키/벨벳',
-  //   '아동복',
-  //   '티셔츠',
-  //   '셔츠',
-  //   '수트',
-  //   '외투',
-  // ];
-
   const dummy7 = [
     ['분야', info?.fieldTech.field.join(', ')],
     [
@@ -123,7 +103,7 @@ function CorporationDetail() {
   const getCorporationInfo = async () => {
     if (id) {
       const result = await _getCorporationInfo(id);
-      console.log(result.data);
+      // console.log(result.data);
       setInfo(result.data);
     }
   };
@@ -134,13 +114,11 @@ function CorporationDetail() {
 
   return (
     <CorporationDetailLayout>
+      <Header />
       <CorporationInfo>
         <TitleBox>
-          <div>
-            <h1>{info?.title}</h1>
-            <p>{info?.website}</p>
-          </div>
-          {/* <img src="/images/corporation-logo.svg" /> */}
+          <h1>{info?.title}</h1>
+          <p>{info?.website}</p>
         </TitleBox>
         <InformationBox>
           <div>
@@ -328,30 +306,23 @@ function CorporationDetail() {
 
 const CorporationDetailLayout = styled.div`
   width: 100%;
-  min-width: 1920px;
 `;
 
+// 회사의 대표적인 정보
 const CorporationInfo = styled.section`
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-width: 1920px;
-  width: 100%;
-  padding: 0 360px;
-  max-width: 1920px;
-  margin: 0 auto;
+  max-width: 1240px;
+  margin: 80px auto 80px auto;
+  padding: 0 20px;
   gap: 50px;
-  margin-top: 120px;
-  margin-bottom: 80px;
-
+  // 문의 버튼
   & > button {
     display: flex;
-    align-self: flex-start;
-    height: 54px;
+    justify-content: center;
     padding: 7px 0px;
     width: 145px;
-    justify-content: center;
-    align-items: center;
     border-radius: 100px;
     background: #6663ff;
     color: #fff;
@@ -360,58 +331,76 @@ const CorporationInfo = styled.section`
     font-weight: 700;
     line-height: 40px;
   }
+
+  @media screen and (max-width: 768px) {
+    margin: 20px auto 46px auto;
+    gap: 30px;
+    // 문의 버튼
+    & > button {
+      padding: 12px 0px;
+      width: 100%;
+      font-size: 1.6rem;
+      line-height: 20px;
+    }
+  }
 `;
 
+// 회사명 & 웹사이트
 const TitleBox = styled.div`
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-
-  & > div {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-
-    & > h1 {
-      color: #0b0a0a;
-      font-size: 3rem;
-      font-style: normal;
-      font-weight: 600;
-      line-height: 34px;
-    }
-
-    & > p {
-      color: rgba(11, 10, 10, 0.6);
-      font-size: 2rem;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 24px;
-    }
+  flex-direction: column;
+  gap: 12px;
+  // 회사명
+  & > h1 {
+    color: #0b0a0a;
+    font-size: 3rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 34px;
+  }
+  // 웹사이트
+  & > p {
+    color: rgba(11, 10, 10, 0.6);
+    font-size: 2rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
   }
 
-  & > img {
-    width: 230px;
-    height: 46px;
+  @media screen and (max-width: 768px) {
+    gap: 6px;
+    // 회사명
+    & > h1 {
+      font-size: 1.8rem;
+      line-height: 22px;
+    }
+    // 웹사이트
+    & > p {
+      font-size: 1.4rem;
+      line-height: 14px;
+    }
   }
 `;
 
+// 회사 상세 정보
 const InformationBox = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;
-
+  // label & 내용
   & > div {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 12px;
-
+    // label
     & > span {
       display: flex;
-      width: 74px;
-      padding: 7px 0px;
       justify-content: center;
       align-items: center;
+      width: 74px;
+      min-width: 74px;
+      padding: 7px 0px;
       border-radius: 10px;
       background: #e4e7e9;
       color: #0b0a0a;
@@ -421,7 +410,7 @@ const InformationBox = styled.div`
       line-height: 20px;
       white-space: nowrap;
     }
-
+    // 내용
     & > p {
       color: rgba(11, 10, 10, 0.8);
       font-size: 1.6rem;
@@ -430,32 +419,59 @@ const InformationBox = styled.div`
       line-height: 20px;
     }
   }
+
+  @media screen and (max-width: 768px) {
+    gap: 12px;
+    // label & 내용
+    & > div {
+      gap: 6px;
+      // label
+      & > span {
+        width: 48px;
+        min-width: 48px;
+        padding: 4px 0px;
+        border-radius: 6px;
+        font-size: 1.4rem;
+        line-height: 18px;
+      }
+      // 내용
+      & > p {
+        font-size: 1.2rem;
+        line-height: 16px;
+      }
+    }
+  }
 `;
 
 const Main = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: #eef7fb;
   width: 100%;
-  min-width: 1920px;
-  width: 100%;
-  padding: 80px 360px 130px 360px;
+  background-color: #eef7fb;
   margin: 0 auto;
+  padding: 80px 20px 130px 20px;
   gap: 50px;
+
+  @media screen and (max-width: 768px) {
+    padding: 40px 20px 100px 20px;
+    gap: 20px;
+  }
 `;
 
+// 기업 개요
 const Overview = styled.section`
   display: flex;
   flex-direction: column;
-  border-radius: 24px;
-  border: 1px solid #ededed;
-  background: #fff;
-  width: 1200px;
+  width: 100%;
   height: auto;
-  padding: 30px 0px 40px 30px;
+  max-width: 1200px;
+  background: #ffffff;
+  border: 1px solid #ededed;
+  border-radius: 24px;
+  padding: 30px 30px 40px 30px;
   gap: 30px;
-
+  // 타이틀
   & > h3 {
     color: #0b0a0a;
     font-size: 3rem;
@@ -463,15 +479,14 @@ const Overview = styled.section`
     font-weight: 600;
     line-height: 34px;
   }
-
+  // 기업 특성, 설립일, 종업원 수, 공장 면적, 자본 구조
   & > div:nth-child(2) {
     display: flex;
     flex-direction: row;
-    gap: 15px;
     flex-wrap: wrap;
-
+    gap: 15px;
+    // label
     & > span {
-      padding: 12px 20px;
       background: #ebefff;
       color: #0b0a0a;
       font-size: 2rem;
@@ -480,24 +495,25 @@ const Overview = styled.section`
       line-height: 20px;
       border-radius: 100px;
       white-space: nowrap;
-
+      padding: 12px 20px;
+      // 자본 구조
       &:nth-child(5) {
         background: #ffe9ed;
       }
     }
   }
-
+  // 자본 관련 내용
   & > div:nth-child(3) {
     display: flex;
-    gap: 15px;
     flex-wrap: wrap;
-
+    gap: 15px;
+    // label & 내용
     & > div {
       display: flex;
       flex-direction: row;
       align-items: center;
       gap: 10px;
-
+      // label
       & > span {
         color: #0b0a0a;
         font-size: 1.8rem;
@@ -509,7 +525,7 @@ const Overview = styled.section`
         background: #e4e7e9;
         white-space: nowrap;
       }
-
+      // 내용
       & > p {
         color: rgba(11, 10, 10, 0.9);
         font-size: 1.6rem;
@@ -517,7 +533,7 @@ const Overview = styled.section`
         font-weight: 500;
         line-height: 16px;
       }
-
+      // 3~5번째 label 선택
       &:nth-child(n + 3):nth-child(-n + 5) {
         & > span {
           color: #ffffff;
@@ -526,17 +542,18 @@ const Overview = styled.section`
       }
     }
   }
-
+  // 이익 관련 내용
   & > div:nth-child(4) {
     display: flex;
+    flex-wrap: wrap;
     gap: 15px;
-
+    // label & 내용
     & > div {
       display: flex;
       flex-direction: row;
       align-items: center;
       gap: 10px;
-
+      // label
       & > span {
         color: #0b0a0a;
         font-size: 1.8rem;
@@ -546,8 +563,9 @@ const Overview = styled.section`
         padding: 8px 10px;
         border-radius: 10px;
         background: #e4e7e9;
+        white-space: nowrap;
       }
-
+      // 내용
       & > p {
         color: rgba(11, 10, 10, 0.9);
         font-size: 1.6rem;
@@ -557,19 +575,86 @@ const Overview = styled.section`
       }
     }
   }
+
+  @media screen and (max-width: 768px) {
+    border-radius: 10px;
+    padding: 16px 16px 16px 22px;
+    gap: 16px;
+    // 타이틀
+    & > h3 {
+      font-size: 1.6rem;
+      line-height: 20px;
+    }
+    // 기업 특성, 설립일, 종업원 수, 공장 면적, 자본 구조
+    & > div:nth-child(2) {
+      gap: 8px 6px;
+      // label
+      & > span {
+        font-size: 1.2rem;
+        line-height: 16px;
+        padding: 6px 14px;
+      }
+    }
+    // 자본 관련 내용
+    & > div:nth-child(3) {
+      margin-top: 4px;
+      gap: 8px 6px;
+      // label & 내용
+      & > div {
+        gap: 6px;
+        // label
+        & > span {
+          font-size: 1.2rem;
+          line-height: 16px;
+          padding: 4px 6px;
+          border-radius: 6px;
+        }
+        // 내용
+        & > p {
+          font-size: 1.2rem;
+        }
+      }
+    }
+    // 이익 관련 내용
+    & > div:nth-child(4) {
+      display: flex;
+      margin-top: 4px;
+      gap: 8px 6px;
+      // label & 내용
+      & > div {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 6px;
+        // label
+        & > span {
+          font-size: 1.2rem;
+          line-height: 16px;
+          padding: 4px 6px;
+          border-radius: 6px;
+        }
+        // 내용
+        & > p {
+          font-size: 1.2rem;
+        }
+      }
+    }
+  }
 `;
 
+// 거래처 및 품목
 const Business = styled.section`
   display: flex;
   flex-direction: column;
+  width: 100%;
+  height: auto;
+  max-width: 1200px;
+  background: #ffffff;
   border-radius: 24px;
   border: 1px solid #ededed;
-  background: #fff;
-  width: 1200px;
-  height: auto;
   padding: 30px 30px 40px 30px;
   gap: 30px;
-
+  // 타이틀
   & > h3 {
     color: #0b0a0a;
     font-size: 3rem;
@@ -577,34 +662,13 @@ const Business = styled.section`
     font-weight: 600;
     line-height: 34px;
   }
-
   // 주요 고객
   & > div:nth-child(2) {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
-
-    & > div {
-      display: flex;
-      flex-direction: row;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 12px;
-
-      & > span {
-        padding: 10px 20px;
-        border-radius: 10px;
-        background: #00a8bd;
-        color: #fff;
-        font-size: 1.8rem;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 18px;
-        white-space: nowrap;
-      }
-    }
-
+    // 타이틀
     & > p {
       color: rgba(11, 10, 10, 0.8);
       font-size: 2rem;
@@ -612,21 +676,39 @@ const Business = styled.section`
       font-weight: 600;
       line-height: 24px;
     }
+    // label
+    & > div {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 12px;
+      // label
+      & > span {
+        padding: 10px 20px;
+        border-radius: 10px;
+        background: #00a8bd;
+        color: #ffffff;
+        font-size: 1.8rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 18px;
+        white-space: nowrap;
+      }
+    }
   }
-
   // 수출국 ~ 수입품
   & > div:nth-child(3) {
     display: flex;
     gap: 15px;
     flex-wrap: wrap;
-
+    // label & 내용
     & > div {
       display: flex;
       flex-direction: row;
       align-items: center;
       gap: 10px;
-      flex-wrap: wrap;
-
+      // label
       & > span {
         color: #0b0a0a;
         font-size: 1.8rem;
@@ -638,7 +720,7 @@ const Business = styled.section`
         background: #e4e7e9;
         white-space: nowrap;
       }
-
+      // 내용
       & > p {
         color: rgba(11, 10, 10, 0.9);
         font-size: 1.6rem;
@@ -648,19 +730,18 @@ const Business = styled.section`
       }
     }
   }
-
   // 원자재
   & > div:nth-child(4) {
     display: flex;
     gap: 15px;
     flex-wrap: wrap;
-
+    // label & 내용
     & > div {
       display: flex;
       flex-direction: row;
       align-items: center;
       gap: 10px;
-
+      // label
       & > span {
         color: #0b0a0a;
         font-size: 1.8rem;
@@ -672,7 +753,7 @@ const Business = styled.section`
         background: #e4e7e9;
         white-space: nowrap;
       }
-
+      // 내용
       & > p {
         color: rgba(11, 10, 10, 0.9);
         font-size: 1.6rem;
@@ -682,19 +763,93 @@ const Business = styled.section`
       }
     }
   }
+
+  @media screen and (max-width: 768px) {
+    border-radius: 10px;
+    padding: 16px 16px 16px 22px;
+    gap: 0px;
+    // 타이틀
+    & > h3 {
+      font-size: 1.6rem;
+      line-height: 20px;
+    }
+    // 주요 고객
+    & > div:nth-child(2) {
+      margin-top: 16px;
+      gap: 8px;
+      // 타이틀
+      & > p {
+        font-size: 1.4rem;
+        line-height: 18px;
+      }
+      // label
+      & > div {
+        gap: 6px;
+        // label
+        & > span {
+          font-size: 1.2rem;
+          line-height: 16px;
+          border-radius: 6px;
+          padding: 4px 6px;
+        }
+      }
+    }
+    // 수출국 ~ 수입품
+    & > div:nth-child(3) {
+      gap: 8px 6px;
+      margin-top: 20px;
+      // label & 내용
+      & > div {
+        gap: 6px;
+        // label
+        & > span {
+          font-size: 1.2rem;
+          line-height: 16px;
+          padding: 4px 6px;
+          border-radius: 6px;
+        }
+        // 내용
+        & > p {
+          font-size: 1.2rem;
+        }
+      }
+    }
+    // 원자재
+    & > div:nth-child(4) {
+      margin-top: 8px;
+      gap: 8px 6px;
+      // label & 내용
+      & > div {
+        gap: 6px;
+        // label
+        & > span {
+          font-size: 1.2rem;
+          line-height: 16px;
+          padding: 4px 6px;
+          border-radius: 6px;
+        }
+        // 내용
+        & > p {
+          font-size: 1.2rem;
+        }
+      }
+    }
+  }
 `;
 
+// 분야 기술 생산 시설
 const Technology = styled.section`
   display: flex;
   flex-direction: column;
+  width: 100%;
+  height: auto;
+  max-width: 1200px;
+  background: #ffffff;
   border-radius: 24px;
   border: 1px solid #ededed;
-  background: #fff;
-  width: 1200px;
-  height: auto;
   padding: 30px 30px 40px 30px;
   gap: 30px;
-
+  // 타이틀
   & > h3 {
     color: #0b0a0a;
     font-size: 3rem;
@@ -702,12 +857,12 @@ const Technology = styled.section`
     font-weight: 600;
     line-height: 34px;
   }
-
+  // 주제품
   & > div:nth-child(2) {
     display: flex;
     flex-direction: column;
     gap: 12px;
-
+    // 타이틀
     & > p {
       color: rgba(11, 10, 10, 0.8);
       font-size: 2rem;
@@ -715,7 +870,7 @@ const Technology = styled.section`
       font-weight: 600;
       line-height: 24px;
     }
-
+    // label
     & > div {
       display: flex;
       flex-direction: row;
@@ -735,13 +890,21 @@ const Technology = styled.section`
       }
     }
   }
-
+  // 표준, 규격
   & > div:nth-child(3) {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
-
+    // 타이틀
+    & > p {
+      color: rgba(11, 10, 10, 0.8);
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 24px;
+    }
+    // label
     & > div {
       display: flex;
       flex-direction: row;
@@ -760,41 +923,34 @@ const Technology = styled.section`
         white-space: nowrap;
       }
     }
-
-    & > p {
-      color: rgba(11, 10, 10, 0.8);
-      font-size: 20px;
-      font-style: normal;
-      font-weight: 600;
-      line-height: 24px;
-    }
   }
-
+  // 분야 ~ 생산능력
   & > div:nth-child(4) {
     display: flex;
     flex-direction: column;
     gap: 15px;
-
+    // label & 내용
     & > div {
       display: flex;
       flex-direction: row;
       align-items: center;
       gap: 10px;
-
+      // label
       & > span {
         width: 92px;
+        min-width: 92px;
         text-align: center;
         color: #ffffff;
         font-size: 1.8rem;
         font-style: normal;
         font-weight: 600;
         line-height: 18px;
-        padding: 8px 10px;
+        padding: 8px 0px;
         border-radius: 10px;
         background: #303d48;
         white-space: nowrap;
       }
-
+      // 내용
       & > p {
         color: rgba(11, 10, 10, 0.9);
         font-size: 1.6rem;
@@ -805,17 +961,84 @@ const Technology = styled.section`
     }
   }
 
-  & > div:nth-child(5) {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 30px;
-    & > img {
-      width: 262.5px;
-      height: 180px;
-      border-radius: 14px;
-      background: linear-gradient(0deg, #969696 0%, #969696 100%),
-        linear-gradient(0deg, #969696 0%, #969696 100%), #969696;
+  @media screen and (max-width: 768px) {
+    border-radius: 10px;
+    padding: 16px 16px 16px 22px;
+    gap: 0px;
+    // 타이틀
+    & > h3 {
+      font-size: 1.6rem;
+      line-height: 20px;
+    }
+    // 주제품
+    & > div:nth-child(2) {
+      margin-top: 16px;
+      gap: 8px;
+      // 타이틀
+      & > p {
+        font-size: 1.4rem;
+        line-height: 18px;
+      }
+      // label
+      & > div {
+        gap: 8px 6px;
+        // label
+        & > span {
+          font-size: 1.2rem;
+          line-height: 16px;
+          border-radius: 6px;
+          padding: 4px 6px;
+        }
+      }
+    }
+    // 표준, 규격
+    & > div:nth-child(3) {
+      gap: 8px 6px;
+      margin-top: 20px;
+      // 타이틀
+      & > p {
+        font-size: 1.4rem;
+        line-height: 18px;
+      }
+      // label & 내용
+      & > div {
+        gap: 6px;
+        // label
+        & > span {
+          font-size: 1.2rem;
+          line-height: 16px;
+          padding: 4px 6px;
+          border-radius: 6px;
+        }
+        // 내용
+        & > p {
+          font-size: 1.2rem;
+        }
+      }
+    }
+    // 분야 ~ 생산능력
+    & > div:nth-child(4) {
+      flex-direction: row;
+      flex-wrap: wrap;
+      margin-top: 20px;
+      gap: 8px 6px;
+      // label & 내용
+      & > div {
+        gap: 6px;
+        // label
+        & > span {
+          width: 54px;
+          min-width: 54px;
+          font-size: 1.2rem;
+          line-height: 16px;
+          padding: 4px 0px;
+          border-radius: 6px;
+        }
+        // 내용
+        & > p {
+          font-size: 1.2rem;
+        }
+      }
     }
   }
 `;
@@ -823,36 +1046,34 @@ const Technology = styled.section`
 const Facility = styled.div`
   display: flex;
   flex-direction: column;
+  background: #ffffff;
+  width: 100%;
+  max-width: 1200px;
+  padding: 30px 30px 40px 30px;
   border-radius: 24px;
   border: 1px solid #ededed;
-  background: #fff;
-  width: 1200px;
-  height: auto;
-  padding: 30px 0px 40px 30px;
   gap: 30px;
-
+  overflow: auto;
+  // 타이틀
   & > h3 {
     color: #0b0a0a;
     font-size: 3rem;
     font-style: normal;
     font-weight: 600;
     line-height: 34px;
+    position: sticky;
+    top: 0;
+    left: 0;
   }
-
+  // 테이블
   & > table {
+    /* position: absolute; */
     border-collapse: collapse;
-    /* border: 1px solid #444444; */
-    border-color: red;
-    table-layout: fixed;
-    width: 1140px;
+    width: auto;
     border-radius: 12px;
     border-style: hidden;
     box-shadow: 0 0 0 1px #666;
     overflow: hidden;
-
-    /* tr {
-      border: 1px solid #7e839b;
-    } */
 
     th,
     td {
@@ -864,16 +1085,14 @@ const Facility = styled.div`
       font-weight: 500;
       line-height: 20px;
       text-align: center;
+      white-space: nowrap;
     }
-
+    // 테이블 헤더
     th {
       background: #eaf1f4;
-
-      /* &:nth-child(2) {
-        width: 140px;
-      } */
+      white-space: nowrap;
       &:nth-child(1) {
-        width: 200px;
+        width: 140px;
       }
       /* &:nth-child(2) {
         width: 350px;
@@ -884,19 +1103,61 @@ const Facility = styled.div`
       &:nth-child(3) {
         width: 310px;
       } */
-      /* &:nth-child(3) {
-        width: 200px;
-      } */
     }
+    // 시설
     & > tr:nth-child(2) {
       & > td:nth-child(1) {
         background: #eaf1f4;
-        padding: 0;
       }
     }
+  }
 
-    td {
-      padding: 14px 35px;
+  @media screen and (max-width: 768px) {
+    padding: 16px 16px 16px 22px;
+    border-radius: 10px;
+    gap: 16px;
+    // 타이틀
+    & > h3 {
+      font-size: 1.6rem;
+      line-height: 20px;
+    }
+    // 테이블
+    & > table {
+      border-radius: 12px;
+      border-style: hidden;
+      box-shadow: 0 0 0 1px #666;
+      overflow: hidden;
+
+      th,
+      td {
+        border: 1px solid #7e839b;
+        padding: 12px 35px;
+        color: #0b0a0a;
+        font-size: 1.2rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 20px;
+        text-align: center;
+      }
+      // 테이블 헤더
+      th {
+        background: #eaf1f4;
+        white-space: nowrap;
+        &:nth-child(1) {
+          width: 140px;
+        }
+      }
+      td {
+        font-size: 1rem;
+        font-weight: 400;
+      }
+      // 시설
+      & > tr:nth-child(2) {
+        & > td:nth-child(1) {
+          font-size: 1.2rem;
+          font-weight: 500;
+        }
+      }
     }
   }
 `;
