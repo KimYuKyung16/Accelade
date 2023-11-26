@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { styled } from 'styled-components';
-import Footer from '@components/footer';
 import { useNavigate } from 'react-router-dom';
+import { styled } from 'styled-components';
+import Header from '@components/header';
+import Footer from '@components/footer';
 
 const vitenam_db_center1 = [
   ['Machine', '기계'],
@@ -66,9 +67,7 @@ function HOME() {
 
   return (
     <HomeLayout>
-      <Header>
-        <img src="/images/header-logo.svg" />
-      </Header>
+      <Header />
       <Main>
         <MainLogo src="images/main-logo.svg" />
         <Video muted autoPlay loop>
@@ -270,10 +269,268 @@ function HOME() {
   );
 }
 
+const HomeLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+`;
+
+const Main = styled.main`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1920px;
+  margin: 70px auto 130px auto;
+
+  @media screen and (max-width: 768px) {
+    margin: 32px auto 100px auto;
+  }
+`;
+
+const MainLogo = styled.img`
+  width: 339.274px;
+  height: 77.602px;
+  margin-bottom: 72.21px;
+
+  @media screen and (max-width: 768px) {
+    height: 52.952px;
+    width: 100%;
+    margin-bottom: 37.4px;
+  }
+`;
+
+const Video = styled.video`
+  width: 100%;
+  height: 800px;
+  object-fit: cover;
+
+  & > source {
+    width: 100%;
+    height: 100%;
+  }
+
+  @media screen and (max-width: 768px) {
+    height: 604px;
+  }
+`;
+
+const Main_Search = styled.section`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 80px 0 100px 0;
+  padding: 0 20px;
+
+  & > div {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 540px;
+    border-radius: 100px;
+    border: 1px solid rgba(48, 61, 72, 0.2);
+    background: #eef7fb;
+    padding-left: 24px;
+    gap: 15px;
+    overflow: hidden;
+
+    & > input {
+      width: 100%;
+      background: none;
+      font-size: 1.8rem;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 22px;
+      padding: 17px 0;
+
+      &::placeholder {
+        color: rgba(6, 6, 23, 0.6);
+      }
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    margin: 50px 0;
+
+    & > div {
+      padding-left: 20px;
+      gap: 8px;
+
+      & > img {
+        width: 16.001px;
+      }
+
+      & > input {
+        width: 100%;
+        background: none;
+        font-size: 1.4rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 22px;
+        padding: 17px 0;
+
+        &::placeholder {
+          color: rgba(6, 6, 23, 0.6);
+        }
+      }
+    }
+  }
+`;
+
+const Main_DBCenter = styled.section`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+
+  h3 {
+    align-self: flex-start;
+    color: #0b0a0a;
+    font-size: 3rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 34px;
+  }
+`;
+
+const DBCenter = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+
+  & > div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 20px;
+
+    & > div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+
+      & > span:nth-child(1) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 92px;
+        height: 92px;
+        border-radius: 100px;
+        background: #00a8bd;
+        color: #fff;
+        font-size: 1.1rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 11px;
+        text-align: center;
+        cursor: pointer;
+
+        &:hover {
+          background: #303d48;
+        }
+      }
+
+      & > span:nth-child(2) {
+        color: rgba(6, 6, 23, 0.8);
+        font-size: 1.6rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 16px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    gap: 16px;
+
+    & > h3 {
+      font-size: 3vw;
+    }
+
+    & > div {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+
+      & > div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+
+        & > span:nth-child(1) {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 72px;
+          height: 72px;
+          border-radius: 100px;
+          background: #00a8bd;
+          color: #fff;
+          font-size: 1.2rem;
+          font-style: normal;
+          font-weight: 600;
+          line-height: 11px;
+          text-align: center;
+          cursor: pointer;
+
+          &:hover {
+            background: #303d48;
+          }
+        }
+
+        & > span:nth-child(2) {
+          color: rgba(6, 6, 23, 0.8);
+          font-size: 1.2rem;
+          font-style: normal;
+          font-weight: 600;
+          line-height: 16px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 370px) {
+    & > div {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(auto, 1fr));
+    }
+  }
+`;
+
+const Main_Logos = styled.section`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 150px 0;
+  padding: 0 20px;
+  gap: 50px;
+
+  @media screen and (max-width: 768px) {
+    margin: 50px 0;
+    gap: 20px;
+
+    & > img {
+      height: 6vw;
+      min-height: 24px;
+    }
+  }
+`;
+
 const MoreBtn = styled.button<{ $visible: boolean }>`
   display: ${(props) => (props.$visible ? 'block' : 'none')};
+  width: 100%;
   height: 46px;
-  /* padding: 12px 95px; */
+  max-width: 240px;
   border-radius: 100px;
   background: #6663ff;
   color: #fff;
@@ -281,8 +538,6 @@ const MoreBtn = styled.button<{ $visible: boolean }>`
   font-style: normal;
   font-weight: 700;
   line-height: 20px;
-  width: 100%;
-  max-width: 240px;
   cursor: pointer;
 
   @media screen and (max-width: 768px) {
@@ -294,20 +549,17 @@ const MoreBtn = styled.button<{ $visible: boolean }>`
 
 const Main_Info = styled.section`
   display: grid;
-  /* flex-direction: row;
-  justify-content: space-between; */
-  width: 100%;
-  margin-bottom: 100px;
-  max-width: 1240px;
-  gap: 40px;
   grid-template-columns: repeat(4, minmax(auto, auto));
+  width: 100%;
+  max-width: 1240px;
+  margin-bottom: 100px;
   padding: 0 20px;
+  gap: 40px;
 
   @media screen and (max-width: 768px) {
-    gap: 15px;
     grid-template-columns: repeat(2, minmax(auto, auto));
-
     margin-bottom: 5vw;
+    gap: 15px;
   }
 `;
 
@@ -315,11 +567,10 @@ const Info__Component = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* width: 270px; */
   height: 250px;
-  border-radius: 20px;
   background: #eef7fb;
   padding-top: 25px;
+  border-radius: 20px;
 
   & > h4 {
     color: rgba(6, 6, 23, 0.8);
@@ -344,7 +595,6 @@ const Info__Component1 = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* width: 270px; */
   height: 250px;
   border-radius: 20px;
   background: #eef7fb;
@@ -417,25 +667,6 @@ const Info__Component1 = styled.div`
   }
 `;
 
-const Video = styled.video`
-  width: 100%;
-  height: 800px;
-  /* min-width: 1920px; */
-  object-fit: cover;
-  /* margin-bottom: 80px; */
-  /* position: absolute; */
-  /* top: 50px; */
-
-  & > source {
-    width: 100%;
-    height: 100%;
-  }
-
-  @media screen and (max-width: 768px) {
-    height: 604px;
-  }
-`;
-
 const Info__Component2 = styled(Info__Component)``;
 
 const Info__Component3 = styled(Info__Component)`
@@ -447,28 +678,6 @@ const Info__Component3 = styled(Info__Component)`
 const Info__Component4 = styled(Info__Component)`
   & > p {
     margin-bottom: 21px;
-  }
-`;
-
-const Main_Logos = styled.section`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin: 150px 0;
-
-  flex-wrap: wrap;
-  gap: 50px;
-  padding: 0 20px;
-
-  @media screen and (max-width: 768px) {
-    margin: 50px 0;
-    gap: 20px;
-
-    & > img {
-      height: 6vw;
-      min-height: 24px;
-    }
   }
 `;
 
@@ -484,7 +693,6 @@ const Main_Corporation = styled.section`
     align-self: flex-start;
     color: #0b0a0a;
     font-size: 3rem;
-    /* font-size: 1.5vw; */
     font-style: normal;
     font-weight: 700;
     line-height: 34px;
@@ -492,8 +700,6 @@ const Main_Corporation = styled.section`
   }
 
   @media screen and (max-width: 768px) {
-    /* padding: 0 18px; */
-
     & > h3 {
       font-size: 1.4rem;
       font-size: 3vw;
@@ -504,29 +710,21 @@ const Main_Corporation = styled.section`
 
 const Corporation_List = styled.div`
   display: grid;
-  /* display: flex;
-  flex-direction: row;
-  flex-wrap: wrap; */
-  width: 100%;
-  gap: 0px 20px;
-  /* column-gap: 20px; */
-  margin-bottom: 70px;
   grid-template-columns: repeat(4, minmax(auto, auto));
+  width: 100%;
+  margin-bottom: 70px;
+  gap: 0px 20px;
 
   @media screen and (max-width: 768px) {
-    margin-bottom: 40px;
     grid-template-columns: repeat(2, minmax(auto, auto));
+    margin-bottom: 40px;
   }
 `;
 
 const Corporation = styled.a`
-  /* height: 340px; */
-  /* width: 285px; */
-  /* background-color: #00a8bd; */
   margin-bottom: 40px;
 
   & img {
-    /* width: 285px; */
     width: 100%;
     height: 80%;
     border-radius: 10px;
@@ -624,236 +822,6 @@ const Corporation = styled.a`
       }
     }
   } */
-`;
-
-const HomeLayout = styled.div`
-  width: 100%;
-  /* max-width: 1920px; */
-  /* padding: 0 20px; */
-`;
-
-const Header = styled.header`
-  width: 100%;
-  padding: 35px 0px 72.18px 12vw;
-
-  @media screen and (max-width: 768px) {
-    padding: 20px 0px 37.65px 20px;
-
-    & > img {
-      height: 16px;
-    }
-  }
-`;
-
-const Main = styled.main`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  /* padding: 0 360px; */
-  max-width: 1920px;
-  margin: 0 auto;
-  margin-bottom: 130px;
-
-  @media screen and (max-width: 768px) {
-    margin-bottom: 100px;
-  }
-`;
-
-const MainLogo = styled.img`
-  width: 339.274px;
-  height: 77.602px;
-  margin-bottom: 72.21px;
-
-  @media screen and (max-width: 768px) {
-    height: 52.952px;
-    width: 100%;
-    margin-bottom: 37.4px;
-  }
-`;
-
-const Main_Search = styled.section`
-  display: flex;
-  justify-content: center;
-  margin: 80px 0 100px 0;
-  width: 100%;
-  padding: 0 20px;
-
-  & > div {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    max-width: 540px;
-    border-radius: 100px;
-    border: 1px solid rgba(48, 61, 72, 0.2);
-    background: #eef7fb;
-    gap: 15px;
-    overflow: hidden;
-    padding-left: 24px;
-
-    & > input {
-      background: none;
-      width: 100%;
-      padding: 17px 0;
-      font-size: 1.8rem;
-      font-style: normal;
-      font-weight: 500;
-      line-height: 22px;
-
-      &::placeholder {
-        color: rgba(6, 6, 23, 0.6);
-      }
-    }
-  }
-
-  @media screen and (max-width: 768px) {
-    margin: 50px 0;
-
-    & > div {
-      gap: 8px;
-      padding-left: 20px;
-
-      & > img {
-        width: 16.001px;
-      }
-
-      & > input {
-        background: none;
-        width: 100%;
-        padding: 17px 0;
-        font-size: 1.4rem;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 22px;
-
-        &::placeholder {
-          color: rgba(6, 6, 23, 0.6);
-        }
-      }
-    }
-  }
-`;
-
-const Main_DBCenter = styled.section`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 1200px;
-  padding: 0 20px;
-
-  h3 {
-    align-self: flex-start;
-    color: #0b0a0a;
-    font-size: 3rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 34px;
-  }
-`;
-
-const DBCenter = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-
-  & > div {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 20px;
-
-    & > div {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-
-      & > span:nth-child(1) {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 92px;
-        height: 92px;
-        border-radius: 100px;
-        background: #00a8bd;
-        color: #fff;
-        font-size: 1.1rem;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 11px;
-        text-align: center;
-        cursor: pointer;
-
-        &:hover {
-          background: #303d48;
-        }
-      }
-
-      & > span:nth-child(2) {
-        color: rgba(6, 6, 23, 0.8);
-        font-size: 1.6rem;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 16px;
-        cursor: pointer;
-      }
-    }
-  }
-
-  @media screen and (max-width: 768px) {
-    gap: 16px;
-
-    & > h3 {
-      font-size: 3vw;
-    }
-
-    & > div {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      gap: 14px;
-      flex-wrap: wrap;
-      /* flex-shrink: 1; */
-      /* background-color: #303d48; */
-
-      & > div {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 5px;
-
-        & > span:nth-child(1) {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 72px;
-          height: 72px;
-          border-radius: 100px;
-          background: #00a8bd;
-          color: #fff;
-          font-size: 1.2rem;
-          font-style: normal;
-          font-weight: 600;
-          line-height: 11px;
-          text-align: center;
-          cursor: pointer;
-
-          &:hover {
-            background: #303d48;
-          }
-        }
-
-        & > span:nth-child(2) {
-          color: rgba(6, 6, 23, 0.8);
-          font-size: 1.2rem;
-          font-style: normal;
-          font-weight: 600;
-          line-height: 16px;
-          cursor: pointer;
-        }
-      }
-    }
-  }
 `;
 
 export default HOME;
