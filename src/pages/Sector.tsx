@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
-import Footer from '@components/footer';
 import { _getList } from '@apis/api/corporation';
+import { default as Header_ } from '@components/header';
+import Footer from '@components/footer';
 
 const sectors = [
   ['Machine', '기계'],
@@ -28,9 +29,9 @@ function Sector() {
   const { state } = useLocation();
   const [list, setList] = useState<listProps[]>([]); // 회사 리스트
   const [selected, setSelected] = useState(state.sector); // 현재 선택된 분야
-  const [totalPages, setTotalPages] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [startNum, setStartNum] = useState<number>(0); // 패이지 시작 번호
+  const [totalPages, setTotalPages] = useState(0); // 총 페이지 수
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [startNum, setStartNum] = useState<number>(0); // 페이지 시작 번호
   const [btnVisible, setBtnVisible] = useState<{
     left: boolean;
     right: boolean;
@@ -45,6 +46,16 @@ function Sector() {
       }
       navigate(`/search?val=${search}`);
     }
+  };
+
+  // 리스트 가져오기
+  const getList = async () => {
+    const result = await _getList({
+      field: selected ? selected : '기계',
+      pageno: currentPage,
+    });
+    setList(result.data.dataList);
+    setTotalPages(result.data.totalPages);
   };
 
   /* 페이지 버튼 생성하기 */
@@ -68,15 +79,6 @@ function Sector() {
     return buttonArray;
   };
 
-  const getList = async () => {
-    const result = await _getList({
-      field: selected ? selected : '기계',
-      pageno: currentPage, // 일단 기본으로 1, 아직 페이징 처리X
-    });
-    setList(result.data.dataList);
-    setTotalPages(result.data.totalPages);
-  };
-
   useEffect(() => {
     getList();
   }, [selected, currentPage]);
@@ -86,7 +88,7 @@ function Sector() {
     setStartNum(0);
   }, [selected]);
 
-  /* 버튼 생성 여부 */
+  /* 좌우로 이동하는 버튼 생성 여부 */
   useEffect(() => {
     if (totalPages <= 5) setBtnVisible({ left: false, right: false });
     else if (currentPage >= 1 && currentPage <= 5) {
@@ -104,6 +106,7 @@ function Sector() {
 
   return (
     <SectorLayout>
+      <Header_ />
       <Header>
         <img
           src="images/main-logo.svg"
@@ -192,23 +195,6 @@ function Sector() {
               type="button"
               value=">"
             />
-            {/* {new Array(totalPages).fill(0).map((_, index) => {
-                return (
-                  <PageBtn
-                    key={index}
-                    onClick={(
-                      e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-                    ) => {
-                      setSelectedPage(
-                        Number((e.target as HTMLElement).innerText)
-                      );
-                    }}
-                    $color={index + 1 === selectedPage}
-                  >
-                    {index + 1}
-                  </PageBtn>
-                );
-              })} */}
           </Pagination>
         </CorporationList>
       </Main>
@@ -217,85 +203,22 @@ function Sector() {
   );
 }
 
-interface IVisible_Props {
-  $visible: boolean;
-}
-
-const MoveBtn = styled.input<IVisible_Props>`
-  display: ${(props: IVisible_Props) =>
-    props.$visible === true ? 'visible' : 'none'};
-  width: 40px;
-  height: 40px;
-  background-color: #6663ff;
-  background: none;
-  color: #4d4d4d;
-  border-radius: 10px;
-  font-size: 2rem;
-  font-weight: 600;
-  cursor: pointer;
-
-  @media screen and (max-width: 768px) {
-    font-size: 1.5rem;
-  }
-`;
-
-// const PageBtn = styled.button<{ $color: boolean }>`
-//   width: 40px;
-//   /* padding: 0 15px; */
-//   height: 40px;
-//   background-color: ${(props) => (props.$color ? '#3e3cb7' : '#6663ff')};
-//   color: #ffffff;
-//   border-radius: 10px;
-//   font-size: 1.5rem;
-//   font-weight: 600;
-//   cursor: pointer;
-// `;
-
-const Pagination = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 80px;
-
-  & > button {
-    width: 40px;
-    height: 40px;
-    background: none;
-    color: #4d4d4d;
-    border-radius: 10px;
-    font-size: 2rem;
-    font-weight: 600;
-    cursor: pointer;
-  }
-
-  @media screen and (max-width: 768px) {
-    gap: 0px;
-    margin-top: 50px;
-
-    & > button {
-      font-size: 1.5rem;
-    }
-  }
-`;
-
 const SectorLayout = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  /* min-width: 1920px; */
+  align-items: center;
 `;
 
 const Header = styled.header`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 50px;
   width: 100%;
   width: 100%;
   max-width: 1200px;
   margin: 80px auto;
   padding: 0 20px;
+  gap: 50px;
 
   & > img {
     width: 199.573px;
@@ -366,13 +289,10 @@ const Main = styled.main`
   flex-direction: column;
   gap: 80px;
   width: 100%;
-  /* min-width: 1200px; */
-  /* padding: 0 360px; */
-  max-width: 1200px;
-  margin: 0 auto;
-  /* margin-top: 80px; */
   height: auto;
+  max-width: 1200px;
   min-height: calc(100vh - 562px);
+  margin: 0 auto;
   padding: 0 20px;
 
   @media screen and (max-width: 768px) {
@@ -382,14 +302,69 @@ const Main = styled.main`
 `;
 
 const Sectors = styled.section`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+  width: 100%;
   gap: 16px;
 
   @media screen and (max-width: 768px) {
-    /* justify-content: center; */
+    grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+  }
+`;
+
+const Sector_ = styled.div<{ $color: boolean }>`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  & > span:nth-child(1) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 92px;
+    height: 92px;
+    border-radius: 100px;
+    background: ${(props) => (props.$color ? '#303d48' : '#00a8bd')};
+    color: #fff;
+    font-size: 1.1rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 11px;
+    text-align: center;
+    cursor: pointer;
+
+    &:hover {
+      background: #303d48;
+    }
+  }
+
+  & > span:nth-child(2) {
+    color: rgba(6, 6, 23, 0.8);
+    font-size: 1.6rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 16px;
+    cursor: pointer;
+  }
+
+  @media screen and (max-width: 768px) {
+    gap: 5px;
+
+    & > span:nth-child(1) {
+      width: 72px;
+      height: 72px;
+      font-size: 1.2rem;
+    }
+
+    & > span:nth-child(2) {
+      color: rgba(6, 6, 23, 0.8);
+      font-size: 1.6rem;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 16px;
+      cursor: pointer;
+    }
   }
 `;
 
@@ -399,7 +374,6 @@ const CorporationList = styled.section`
   align-items: center;
   margin-bottom: 130px;
   min-height: 500px;
-  /* background-color: azure; */
 
   @media screen and (max-width: 768px) {
     margin-bottom: 115px;
@@ -421,14 +395,12 @@ const Corporation = styled.div`
     align-items: center;
     justify-content: space-between;
     gap: 15px;
-    /* background-color: #757575; */
 
     & > div {
       display: flex;
       flex-direction: row;
-      gap: 15px;
       width: 70%;
-      /* background-color: aqua; */
+      gap: 15px;
 
       & > h6 {
         color: #060617;
@@ -520,59 +492,48 @@ const Corporation = styled.div`
   }
 `;
 
-const Sector_ = styled.div<{ $color: boolean }>`
+const Pagination = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  justify-content: center;
   gap: 10px;
+  margin-top: 80px;
 
-  & > span:nth-child(1) {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 92px;
-    height: 92px;
-    border-radius: 100px;
-    background: ${(props) => (props.$color ? '#303d48' : '#00a8bd')};
-    color: #fff;
-    font-size: 1.1rem;
-    font-style: normal;
+  & > button {
+    width: 40px;
+    height: 40px;
+    background: none;
+    color: #4d4d4d;
+    border-radius: 10px;
+    font-size: 2rem;
     font-weight: 600;
-    line-height: 11px;
-    text-align: center;
-    cursor: pointer;
-
-    &:hover {
-      background: #303d48;
-    }
-  }
-
-  & > span:nth-child(2) {
-    color: rgba(6, 6, 23, 0.8);
-    font-size: 1.6rem;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 16px;
     cursor: pointer;
   }
 
   @media screen and (max-width: 768px) {
-    gap: 5px;
+    gap: 0px;
+    margin-top: 50px;
 
-    & > span:nth-child(1) {
-      width: 72px;
-      height: 72px;
-      font-size: 1.2rem;
+    & > button {
+      font-size: 1.5rem;
     }
+  }
+`;
 
-    & > span:nth-child(2) {
-      color: rgba(6, 6, 23, 0.8);
-      font-size: 1.6rem;
-      font-style: normal;
-      font-weight: 600;
-      line-height: 16px;
-      cursor: pointer;
-    }
+const MoveBtn = styled.input<{ $visible: boolean }>`
+  display: ${(props) => (props.$visible === true ? 'visible' : 'none')};
+  width: 40px;
+  height: 40px;
+  background-color: #6663ff;
+  background: none;
+  color: #4d4d4d;
+  border-radius: 10px;
+  font-size: 2rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  @media screen and (max-width: 768px) {
+    font-size: 1.5rem;
   }
 `;
 
