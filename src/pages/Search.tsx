@@ -1,8 +1,9 @@
-import { _getSearchedList } from '@apis/api/corporation';
-import Footer from '@components/footer';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { styled } from 'styled-components';
+import { _getSearchedList } from '@apis/api/corporation';
+import { default as Header_ } from '@components/header';
+import Footer from '@components/footer';
 
 interface ListProps {
   companyName: string;
@@ -15,12 +16,12 @@ interface ListProps {
 function _Search() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const keyword = searchParams.get('val');
-  const [list, setList] = useState<ListProps[]>([]);
-  const [totalPages, setTotalPages] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [startNum, setStartNum] = useState<number>(0); // 패이지 시작 번호
-  const [totalCount, setTotalCount] = useState(0);
+  const keyword = searchParams.get('val'); // 메인에서 들어온 검색어
+  const [list, setList] = useState<ListProps[]>([]); // 회사 리스트
+  const [totalPages, setTotalPages] = useState(0); // 총 페이지 수
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [startNum, setStartNum] = useState<number>(0); // 페이지 시작 번호
+  const [totalCount, setTotalCount] = useState(0); // 회사 리스트 개수
   const [btnVisible, setBtnVisible] = useState<{
     left: boolean;
     right: boolean;
@@ -39,6 +40,7 @@ function _Search() {
     }
   };
 
+  // 리스트 가져오기
   const getSearchedList = async () => {
     if (search) {
       const result = await _getSearchedList({
@@ -76,7 +78,7 @@ function _Search() {
     getSearchedList();
   }, [keyword, currentPage]);
 
-  /* 버튼 생성 여부 */
+  /* 좌우로 이동하는 버튼 생성 여부 */
   useEffect(() => {
     if (totalPages <= 5) setBtnVisible({ left: false, right: false });
     else if (currentPage >= 1 && currentPage <= 5) {
@@ -94,6 +96,7 @@ function _Search() {
 
   return (
     <SearchLayout>
+      <Header_ />
       <Main>
         <Header>
           <img
@@ -163,21 +166,6 @@ function _Search() {
             type="button"
             value=">"
           />
-          {/* {new Array(totalPages).fill(0).map((_, index) => {
-            return (
-              <PageBtn
-                key={index}
-                onClick={(
-                  e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-                ) => {
-                  setCurrentPage(Number((e.target as HTMLElement).innerText));
-                }}
-                $color={index + 1 === currentPage}
-              >
-                {index + 1}
-              </PageBtn>
-            );
-          })} */}
         </Pagination>
       </Main>
       <Footer />
@@ -185,77 +173,11 @@ function _Search() {
   );
 }
 
-interface IVisible_Props {
-  $visible: boolean;
-}
-
-const MoveBtn = styled.input<IVisible_Props>`
-  display: ${(props: IVisible_Props) =>
-    props.$visible === true ? 'visible' : 'none'};
-  width: 40px;
-  height: 40px;
-  background-color: #6663ff;
-  background: none;
-  color: #4d4d4d;
-  border-radius: 10px;
-  font-size: 2rem;
-  font-weight: 600;
-  cursor: pointer;
-
-  @media screen and (max-width: 768px) {
-    font-size: 1.5rem;
-  }
-`;
-
-// const PageBtn = styled.button<{ $color: boolean }>`
-//   width: 40px;
-//   /* padding: 0 15px; */
-//   height: 40px;
-//   background-color: ${(props) => (props.$color ? '#3e3cb7' : '#6663ff')};
-//   color: #ffffff;
-//   border-radius: 10px;
-//   font-size: 1.5rem;
-//   font-weight: 600;
-//   cursor: pointer;
-// `;
-
-const Pagination = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 80px;
-  margin-bottom: 130px;
-
-  & > button {
-    width: 40px;
-    height: 40px;
-    background: none;
-    color: #4d4d4d;
-    border-radius: 10px;
-    font-size: 2rem;
-    font-weight: 600;
-    cursor: pointer;
-  }
-
-  @media screen and (max-width: 768px) {
-    gap: 0px;
-    margin-top: 50px;
-    margin-bottom: 115px;
-
-    & > button {
-      font-size: 1.5rem;
-    }
-  }
-`;
-
 const SearchLayout = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   align-items: flex-start;
-  /* min-width: 1920px; */
-  /* max-width: 1200px; */
 `;
 
 const Header = styled.header`
@@ -263,13 +185,9 @@ const Header = styled.header`
   flex-direction: row;
   align-items: center;
   gap: 50px;
-  /* min-width: 1920px; */
   width: 100%;
-  /* padding: 0 360px; */
-  /* max-width: 1920px; */
   max-width: 1200px;
   margin: 80px auto;
-  /* padding: 0 20px; */
 
   & > img {
     width: 199.573px;
@@ -342,9 +260,7 @@ const Main = styled.main`
   max-width: 1200px;
   margin: 0 auto;
   height: auto;
-  /* margin-bottom: 330px; */
   min-height: calc(100vh - 349px);
-  /* min-height: 100vh; */
   padding: 0 20px;
 
   & > div:nth-child(2) {
@@ -371,8 +287,8 @@ const Main = styled.main`
   }
 
   @media screen and (max-width: 768px) {
-    gap: 0px;
     min-height: calc(100vh - 224px);
+    gap: 0px;
 
     & > div:nth-child(2) {
       margin-bottom: 30px;
@@ -385,7 +301,6 @@ const CorporationList = styled.section`
   flex-direction: column;
   align-items: center;
   min-height: 500px;
-  /* margin-bottom: 130px; */
 
   @media screen and (max-width: 768px) {
     min-height: 200px;
@@ -407,7 +322,6 @@ const Corporation = styled.div`
     align-items: center;
     justify-content: space-between;
     gap: 15px;
-    /* background-color: #757575; */
 
     & > div {
       display: flex;
@@ -510,6 +424,53 @@ const Corporation = styled.div`
         width: 100%;
       }
     }
+  }
+`;
+
+const Pagination = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 80px;
+  margin-bottom: 130px;
+
+  & > button {
+    width: 40px;
+    height: 40px;
+    background: none;
+    color: #4d4d4d;
+    border-radius: 10px;
+    font-size: 2rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  @media screen and (max-width: 768px) {
+    gap: 0px;
+    margin-top: 50px;
+    margin-bottom: 115px;
+
+    & > button {
+      font-size: 1.5rem;
+    }
+  }
+`;
+
+const MoveBtn = styled.input<{ $visible: boolean }>`
+  display: ${(props) => (props.$visible === true ? 'visible' : 'none')};
+  width: 40px;
+  height: 40px;
+  background-color: #6663ff;
+  background: none;
+  color: #4d4d4d;
+  border-radius: 10px;
+  font-size: 2rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  @media screen and (max-width: 768px) {
+    font-size: 1.5rem;
   }
 `;
 
