@@ -56,6 +56,7 @@ function HOME() {
       if (search.length === 0) {
         return;
       }
+      window.sessionStorage.setItem('currentPageNum', '1');
       navigate(`/search?val=${search}`);
     }
   };

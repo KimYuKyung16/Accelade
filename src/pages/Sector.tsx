@@ -66,14 +66,15 @@ function Sector() {
     last = last >= totalPages ? totalPages : last;
     for (let i = start; i <= last; i++) {
       buttonArray.push(
-        <button
+        <PageBtn
           key={i}
           onClick={() => {
             setCurrentPage(i);
           }}
+          $color={i === currentPage}
         >
           {i}
-        </button>
+        </PageBtn>
       );
     }
     return buttonArray;
@@ -499,24 +500,24 @@ const Pagination = styled.div`
   gap: 10px;
   margin-top: 80px;
 
-  & > button {
-    width: 40px;
-    height: 40px;
-    background: none;
-    color: #4d4d4d;
-    border-radius: 10px;
-    font-size: 2rem;
-    font-weight: 600;
-    cursor: pointer;
-  }
-
   @media screen and (max-width: 768px) {
     gap: 0px;
     margin-top: 50px;
+  }
+`;
 
-    & > button {
-      font-size: 1.5rem;
-    }
+const PageBtn = styled.button<{ $color: boolean }>`
+  width: 40px;
+  height: 40px;
+  background: none;
+  color: ${(props) => (props.$color ? '#00a8bd' : '#4d4d4d')};
+  border-radius: 10px;
+  font-size: 2rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  @media screen and (max-width: 768px) {
+    font-size: 1.5rem;
   }
 `;
 

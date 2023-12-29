@@ -15,11 +15,12 @@ interface ListProps {
 
 function _Search() {
   const navigate = useNavigate();
+  const sessionCurrentPageNum = window.sessionStorage.getItem('currentPageNum');
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get('val'); // 메인에서 들어온 검색어
   const [list, setList] = useState<ListProps[]>([]); // 회사 리스트
   const [totalPages, setTotalPages] = useState(0); // 총 페이지 수
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [currentPage, setCurrentPage] = useState(Number(sessionCurrentPageNum)); // 현재 페이지
   const [startNum, setStartNum] = useState<number>(0); // 페이지 시작 번호
   const [totalCount, setTotalCount] = useState(0); // 회사 리스트 개수
   const [btnVisible, setBtnVisible] = useState<{
@@ -27,6 +28,10 @@ function _Search() {
     right: boolean;
   }>({ left: false, right: true }); // 좌우 버튼 가시성 여부
   const [search, setSearch] = useState(keyword); // 검색어
+
+  // const [currentPageNum, setCurrentPageNum] = useState(
+  //   sessionCurrentPageNum || '1'
+  // );
 
   // 검색칸에서 엔터를 눌렀을 경우
   const handleOnSearchKeyPress = (e: React.KeyboardEvent<HTMLElement>) => {
@@ -50,6 +55,7 @@ function _Search() {
       setList(result.data.dataList);
       setTotalCount(result.data.totalCount);
       setTotalPages(result.data.totalPages);
+      console.log(result);
     }
   };
 
@@ -61,14 +67,16 @@ function _Search() {
     last = last >= totalPages ? totalPages : last;
     for (let i = start; i <= last; i++) {
       buttonArray.push(
-        <button
+        <PageBtn
           key={i}
           onClick={() => {
+            window.sessionStorage.setItem('currentPageNum', String(i));
             setCurrentPage(i);
           }}
+          $color={i === currentPage}
         >
           {i}
-        </button>
+        </PageBtn>
       );
     }
     return buttonArray;
@@ -93,6 +101,22 @@ function _Search() {
   useEffect(() => {
     setCurrentPage(startNum * 5 + 1);
   }, [startNum]);
+
+  useEffect(() => {
+    window.sessionStorage.setItem('sessionCurrentPageNum', String(currentPage));
+  }, [currentPage]);
+
+  // useEffect(() => {
+  //   let startNum = Math.floor(currentPage / 5);
+
+  //   console.log(startNum);
+
+  //   if (currentPage % 5 === 0) {
+  //     startNum = startNum - 1;
+  //   }
+
+  //   setStartNum(startNum);
+  // }, []);
 
   return (
     <SearchLayout>
@@ -435,17 +459,6 @@ const Pagination = styled.div`
   margin-top: 80px;
   margin-bottom: 130px;
 
-  & > button {
-    width: 40px;
-    height: 40px;
-    background: none;
-    color: #4d4d4d;
-    border-radius: 10px;
-    font-size: 2rem;
-    font-weight: 600;
-    cursor: pointer;
-  }
-
   @media screen and (max-width: 768px) {
     gap: 0px;
     margin-top: 50px;
@@ -454,6 +467,21 @@ const Pagination = styled.div`
     & > button {
       font-size: 1.5rem;
     }
+  }
+`;
+
+const PageBtn = styled.button<{ $color: boolean }>`
+  width: 40px;
+  height: 40px;
+  background: none;
+  color: ${(props) => (props.$color ? '#00a8bd' : '#4d4d4d')};
+  border-radius: 10px;
+  font-size: 2rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  @media screen and (max-width: 768px) {
+    font-size: 1.5rem;
   }
 `;
 
