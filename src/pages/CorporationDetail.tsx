@@ -10,7 +10,7 @@ interface facilityStatusProps {
   machine: string;
   manuCom: string;
   manuCoun: string;
-  mode: string;
+  model: string;
   quantity: string;
 }
 
@@ -103,7 +103,7 @@ function CorporationDetail() {
   const getCorporationInfo = async () => {
     if (id) {
       const result = await _getCorporationInfo(id);
-      // console.log(result.data);
+      console.log(result.data);
       setInfo(result.data);
     }
   };
@@ -150,7 +150,6 @@ function CorporationDetail() {
             <p>{info?.companyInfo.FAX ? info?.companyInfo.FAX : 'N/A'}</p>
           </div>
         </InformationBox>
-        <button>문의</button>
       </CorporationInfo>
       <Main>
         <Overview>
@@ -268,10 +267,11 @@ function CorporationDetail() {
               <table>
                 <tr>
                   <th>구분</th>
-                  <th>시설명칭</th>
-                  {/* <th>수량 (대)</th>
+                  <th>기계</th>
+                  <th>모델</th>
+                  <th>수량 (대)</th>
                   <th>제조사</th>
-                  <th>제조국</th> */}
+                  <th>제조국</th>
                 </tr>
                 <tr>
                   <td rowSpan={8}>시설</td>
@@ -280,20 +280,13 @@ function CorporationDetail() {
                   return (
                     <tr key={index}>
                       <td>{x.machine}</td>
-                      {/* <td>{x.quantity}</td>
+                      <td>{x.model}</td>
+                      <td>{x.quantity}</td>
                       <td>{x.manuCom}</td>
-                      <td>{x.manuCoun}</td> */}
+                      <td>{x.manuCoun}</td>
                     </tr>
                   );
                 })}
-                {
-                  // <tr>
-                  //   <td>&nbsp;</td>
-                  //   <td>&nbsp;</td>
-                  //   <td>&nbsp;</td>
-                  //   <td>&nbsp;</td>
-                  // </tr>
-                }
               </table>
             </Facility>
           </>
