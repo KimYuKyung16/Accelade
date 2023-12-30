@@ -277,6 +277,14 @@ function CorporationDetail() {
                   <td rowSpan={8}>시설</td>
                 </tr>
                 {info?.facilityStatus.map((x, index) => {
+                  if (
+                    x.machine === '-' &&
+                    x.manuCom === '-' &&
+                    x.manuCoun === '-' &&
+                    x.model === '-' &&
+                    x.quantity === '-'
+                  )
+                    return;
                   return (
                     <tr key={index}>
                       <td>{x.machine}</td>
