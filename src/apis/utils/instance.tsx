@@ -9,4 +9,18 @@ const defaultApi = axios.create({
   },
 });
 
+const fileApi = axios.create({
+  baseURL: BASE_URL,
+  headers: { 'Content-Type': 'multipart/form-data; charset: UTF-8;' },
+});
+
+fileApi.interceptors.request.use((config) => {
+  const token = localStorage.getItem('accessToken');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export const defaultInstance = defaultApi;
+export const fileInstance = fileApi;
