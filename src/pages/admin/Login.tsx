@@ -1,5 +1,6 @@
 import { login } from '@apis/api/admin';
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -37,6 +38,12 @@ function Login() {
 
   return (
     <LoginLayout>
+      <Helmet>
+        <meta
+          name="description"
+          content="Vietnam corporate information exchange platform 베트남 기업정보교류플랫폼"
+        />
+      </Helmet>
       <LoginBox>
         <h3>System Admin</h3>
         <InputLabelBox>

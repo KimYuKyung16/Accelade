@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import Header from '@components/header';
@@ -68,6 +69,12 @@ function HOME() {
 
   return (
     <HomeLayout>
+      <Helmet>
+        <meta
+          name="description"
+          content="Vietnam corporate information exchange platform 베트남 기업정보교류플랫폼"
+        />
+      </Helmet>
       <Header />
       <Main>
         <MainLogo src="images/main-logo.svg" />

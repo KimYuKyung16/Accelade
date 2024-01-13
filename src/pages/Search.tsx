@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { _getSearchedList } from '@apis/api/corporation';
@@ -120,6 +121,12 @@ function _Search() {
 
   return (
     <SearchLayout>
+      <Helmet>
+        <meta
+          name="description"
+          content="Vietnam corporate information exchange platform 베트남 기업정보교류플랫폼"
+        />
+      </Helmet>
       <Header_ />
       <Main>
         <Header>

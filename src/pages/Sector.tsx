@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { _getList } from '@apis/api/corporation';
@@ -107,6 +108,12 @@ function Sector() {
 
   return (
     <SectorLayout>
+      <Helmet>
+        <meta
+          name="description"
+          content="Vietnam corporate information exchange platform 베트남 기업정보교류플랫폼"
+        />
+      </Helmet>
       <Header_ />
       <Header>
         <img

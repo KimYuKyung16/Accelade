@@ -1,5 +1,6 @@
 import { confirmToken, uploadExcelFile } from '@apis/api/admin';
 import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -43,6 +44,12 @@ function Main() {
 
   return (
     <MainLayout>
+      <Helmet>
+        <meta
+          name="description"
+          content="Vietnam corporate information exchange platform 베트남 기업정보교류플랫폼"
+        />
+      </Helmet>
       <MenuBox>
         <MenuList>
           <li>엑셀 파일 변경</li>
