@@ -29,6 +29,12 @@ interface InformationProps {
     capital: string;
     info: string[];
     recentSales: string;
+    totalAsset: string;
+    shortTermAsset: string;
+    longTermAsset: string;
+    netProfit: string;
+    profitBeforeTax: string;
+    profitAfterTax: string;
   };
   customersItems: {
     customer: string[];
@@ -59,15 +65,15 @@ function CorporationDetail() {
   const dummy2 = [
     ['자본금', info?.companyOverview.capital],
     ['최근 매출', info?.companyOverview.recentSales],
-    ['총 자산', 'N/A'],
-    ['단기 자산', 'N/A'],
-    ['장기 자산', 'N/A'],
+    ['총 자산', info?.companyOverview.totalAsset],
+    ['단기 자산', info?.companyOverview.shortTermAsset],
+    ['장기 자산', info?.companyOverview.longTermAsset],
   ];
 
   const dummy3 = [
-    ['손이익', 'N/A'],
-    ['세전이익', 'N/A'],
-    ['세후이익', 'N/A'],
+    ['손이익', info?.companyOverview.netProfit],
+    ['세전이익', info?.companyOverview.profitBeforeTax],
+    ['세후이익', info?.companyOverview.profitAfterTax],
   ];
 
   const dummy4 = [
@@ -274,7 +280,7 @@ function CorporationDetail() {
                   <th>제조국</th>
                 </tr>
                 <tr>
-                  <td rowSpan={8}>시설</td>
+                  <td rowSpan={9}>시설</td>
                 </tr>
                 {info?.facilityStatus.map((x, index) => {
                   if (
