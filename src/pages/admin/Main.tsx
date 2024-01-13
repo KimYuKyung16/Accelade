@@ -1,10 +1,9 @@
 import { confirmToken, uploadExcelFile } from '@apis/api/admin';
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 function Main() {
-  const { state } = useLocation();
   const navigate = useNavigate();
   const [fileName, setFileName] = useState('');
   const [uploadFile, setUploadFile] = useState<File | undefined>(undefined);
