@@ -1,4 +1,4 @@
-import { uploadExcelFile } from '@apis/api/admin';
+import { confirmToken, uploadExcelFile } from '@apis/api/admin';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -29,12 +29,17 @@ function Main() {
     }
   };
 
-  useEffect(() => {
-    if (!state || !state.permit) {
-      // url 직접 접근 방지
-      alert('접근할 수 없습니다');
-      navigate('/admin/login');
+  const getAccessAuthority = async () => {
+    const auth = await confirmToken();
+
+    if (auth.status === 401 || auth.status === 403) {
+      alert('접근할 권한이 없습니다.');
+      navigate('/admin/login', { replace: true });
     }
+  };
+
+  useEffect(() => {
+    getAccessAuthority();
   }, []);
 
   return (
