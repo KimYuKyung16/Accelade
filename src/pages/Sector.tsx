@@ -10,10 +10,10 @@ const sectors = [
   ['Machine', '기계'],
   ['Plastic', '플라스틱'],
   ['Automated System', '자동화'],
-  ['Chemicals', '화학물질'],
-  ['Electronic', '전기/전자'],
   ['Metal', '금속'],
   ['Textile', '섬유'],
+  ['Chemicals', '화학물질'],
+  ['Electronic', '전기/전자'],
   ['ETC', '기타'],
 ];
 
