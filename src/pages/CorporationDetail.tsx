@@ -110,7 +110,6 @@ function CorporationDetail() {
   const getCorporationInfo = async () => {
     if (id) {
       const result = await _getCorporationInfo(id);
-      console.log(result.data);
       setInfo(result.data);
     }
   };

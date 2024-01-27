@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
@@ -66,6 +66,12 @@ function HOME() {
     setPdfList((val) => [...val, ...PDF2]);
     setBtnVisible(false);
   };
+
+  useEffect(() => {
+    localStorage.removeItem('selected');
+    localStorage.removeItem('currentPage');
+    localStorage.removeItem('startNum');
+  }, []);
 
   return (
     <HomeLayout>

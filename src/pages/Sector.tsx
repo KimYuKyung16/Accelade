@@ -30,14 +30,15 @@ function Sector() {
   const { state } = useLocation();
   const [list, setList] = useState<listProps[]>([]); // 회사 리스트
   const [selected, setSelected] = useState(state.sector); // 현재 선택된 분야
-  const [totalPages, setTotalPages] = useState(0); // 총 페이지 수
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [totalPages, setTotalPages] = useState<number | undefined>(undefined); // 총 페이지 수
+  const [currentPage, setCurrentPage] = useState<number | undefined>(undefined); // 현재 페이지
   const [startNum, setStartNum] = useState<number>(0); // 페이지 시작 번호
   const [btnVisible, setBtnVisible] = useState<{
     left: boolean;
     right: boolean;
   }>({ left: false, right: true }); // 좌우 버튼 가시성 여부
   const [search, setSearch] = useState(''); // 검색어
+  const [arrowState, setArrowState] = useState(false); // 페이징 좌우 화살표 클릭 여부
 
   // 검색칸에서 엔터를 눌렀을 경우
   const handleOnSearchKeyPress = (e: React.KeyboardEvent<HTMLElement>) => {
@@ -48,9 +49,9 @@ function Sector() {
       navigate(`/search?val=${search}`);
     }
   };
-
   // 리스트 가져오기
   const getList = async () => {
+    if (!currentPage) return;
     const result = await _getList({
       field: selected ? selected : '기계',
       pageno: currentPage,
@@ -58,9 +59,9 @@ function Sector() {
     setList(result.data.dataList);
     setTotalPages(result.data.totalPages);
   };
-
   /* 페이지 버튼 생성하기 */
   const create_PageBtn = () => {
+    if (!totalPages) return;
     const buttonArray = [];
     const start = startNum * 5 + 1;
     let last = start + 4;
@@ -81,17 +82,9 @@ function Sector() {
     return buttonArray;
   };
 
-  useEffect(() => {
-    getList();
-  }, [selected, currentPage]);
-
-  useEffect(() => {
-    setCurrentPage(1);
-    setStartNum(0);
-  }, [selected]);
-
   /* 좌우로 이동하는 버튼 생성 여부 */
   useEffect(() => {
+    if (!totalPages || !currentPage) return;
     if (totalPages <= 5) setBtnVisible({ left: false, right: false });
     else if (currentPage >= 1 && currentPage <= 5) {
       setBtnVisible({ left: false, right: true });
@@ -101,10 +94,50 @@ function Sector() {
       setBtnVisible({ left: true, right: true });
     }
   }, [totalPages, currentPage]);
-
+  // 현재 페이지 설정하는 부분
   useEffect(() => {
-    setCurrentPage(startNum * 5 + 1);
+    if (arrowState) {
+      setCurrentPage(startNum * 5 + 1);
+    }
   }, [startNum]);
+
+  // 제일 처음 렌더링될 때 이미 저장되어있는 값이 있다면 적용
+  useEffect(() => {
+    if (localStorage.getItem('selected')) {
+      // localstorage에 selected 값이 있을 경우
+      setSelected(localStorage.getItem('selected'));
+    }
+    if (localStorage.getItem('currentPage')) {
+      // localstorage에 currentPage 값이 있을 경우
+      setCurrentPage(Number(localStorage.getItem('currentPage')));
+    } else {
+      setCurrentPage(1);
+    }
+    if (localStorage.getItem('startNum')) {
+      // localstorage에 startNum 값이 있을 경우
+      setStartNum(Number(localStorage.getItem('startNum')));
+    } else {
+      setStartNum(0);
+    }
+  }, []);
+
+  // 분야 선택 바꿀 때마다 적용
+  useEffect(() => {
+    localStorage.setItem('selected', selected);
+  }, [selected]);
+  // 현재 페이지 바꿀 때마다 적용
+  useEffect(() => {
+    if (currentPage) {
+      let nStartNum = Math.floor(currentPage / 5);
+      if (currentPage % 5 === 0) nStartNum--;
+      // currentPage, startNum 설정
+      localStorage.setItem('currentPage', String(currentPage));
+      localStorage.setItem('startNum', String(nStartNum));
+    }
+  }, [currentPage]);
+  useEffect(() => {
+    getList();
+  }, [selected, currentPage]);
 
   return (
     <SectorLayout>
@@ -141,6 +174,8 @@ function Sector() {
                 <span
                   onClick={() => {
                     setSelected(sector[1]);
+                    setCurrentPage(1);
+                    setStartNum(0);
                   }}
                 >
                   {sector[0]}
@@ -148,6 +183,8 @@ function Sector() {
                 <span
                   onClick={() => {
                     setSelected(sector[1]);
+                    setCurrentPage(1);
+                    setStartNum(0);
                   }}
                 >
                   {sector[1]}
@@ -190,6 +227,7 @@ function Sector() {
               $visible={btnVisible.left}
               onClick={() => {
                 setStartNum((value) => value - 1);
+                setArrowState(true);
               }}
               type="button"
               value="<"
@@ -199,6 +237,7 @@ function Sector() {
               $visible={btnVisible.right}
               onClick={() => {
                 setStartNum((value) => value + 1);
+                setArrowState(true);
               }}
               type="button"
               value=">"
