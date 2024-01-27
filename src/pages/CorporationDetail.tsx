@@ -62,6 +62,7 @@ function CorporationDetail() {
   const params = useParams();
   const id = params.id;
   const [info, setInfo] = useState<InformationProps | undefined>(undefined);
+  const [facilityStatusVisible, setfacilityStatusVisible] = useState(false); // 시설현황 visible
 
   const dummy2 = [
     ['자본금', info?.companyOverview.capital],
@@ -113,6 +114,25 @@ function CorporationDetail() {
       setInfo(result.data);
     }
   };
+
+  useEffect(() => {
+    if (!info?.facilityStatus) return;
+    let state = 0;
+    for (let i = 0; i < info?.facilityStatus.length; i++) {
+      if (
+        info.facilityStatus[i].machine === '-' &&
+        info.facilityStatus[i].model === '-' &&
+        info.facilityStatus[i].quantity === '-' &&
+        info.facilityStatus[i].manuCom === '-' &&
+        info.facilityStatus[i].manuCoun === '-'
+      ) {
+        state++;
+      }
+    }
+    if (state !== info?.facilityStatus.length) {
+      setfacilityStatusVisible(true);
+    }
+  }, [info]);
 
   useEffect(() => {
     getCorporationInfo();
@@ -272,7 +292,9 @@ function CorporationDetail() {
             })}
           </div> */}
         </Technology>
-        {info?.facilityStatus && info?.facilityStatus.length !== 0 ? (
+        {facilityStatusVisible &&
+        info?.facilityStatus &&
+        info?.facilityStatus.length !== 0 ? (
           <>
             <Facility>
               <h3>시설현황</h3>
