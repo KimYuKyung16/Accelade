@@ -212,7 +212,7 @@ function Sector() {
                         {/* {value.sector.map((x: any) => {
                       return <span key={x}>{x}</span>;
                     })} */}
-                        <span>{value.sector[0]}</span>
+                        <span>{selected}</span>
                         <span>{value.companyType} 기업</span>
                       </div>
                     </div>
